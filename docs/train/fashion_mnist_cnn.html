@@ -1,0 +1,1215 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Machine Learning Training and Inference with PyTorch &#8212; AUP AI Tutorials</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'train/fashion_mnist_cnn';</script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Model Training for Pneumonia Detection" href="pneumonia_detection_pt.html" />
+    <link rel="prev" title="Mandelbrot Multi-Layer Perceptron Model" href="mandelbrot_train.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">AUP AI Tutorials</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    AUP AI Tutorials
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Paths</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../paths.html">Organization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">AI Fundamentals</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../fundamentals.html">Artificial Intelligence Fundamentals</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../fundamentals/math-fundamentals.html">Mathematics for AI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fundamentals/ml-fundamentals.html">Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fundamentals/genai-fundamentals.html">Generative AI</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Setup Environment</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../env/env.html">Configuring the Environment</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../env/env-cpu.html">Setting PyTorch Environment for CPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env/env-gpu.html">Setting PyTorch Environment for GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env/env-gpu-windows.html">Setting PyTorch Environment for GPU</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../get-started.html">Get Started with AI on AMD Platforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../get-started/hf.html">Using Hugging Face pre-trained models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/mnist-mlp.html">MNIST Classification with an MLP Hugging Face Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/semantic-segmentation.html">Semantic Segmentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/yolov10.html">Image Classification using Yolov10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/flan-t5-small.html">Fine-tuned LAnguage Net Text-To-Text Transfer Transformer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/gemma2.html">Google Enhanced Multimodal Machine Learning 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/whisper.html">OpenAI Whisper - Speech Recognition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/phi-3-vision.html">Phi-3-vision Instruct Open Multimodal Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/phi-3-mini-instruct.html">Phi-3 Instruct Open Model</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../get-started/pytorch.html">Using PyTorch Hub Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/pytorch/lenet.html">LetNet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/pytorch/resnet50.html">Residual Network - ResNet50</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../get-started/genai.html">Generative AI on AMD platforms</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Design your own Model</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../design-model.html">Design your own model on AMD Platforms</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="mandelbrot_dataset.html">Create Mandelbrot Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mandelbrot_train.html">Mandelbrot Multi-Layer Perceptron Model</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Machine Learning Training and Inference with PyTorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pneumonia_detection_pt.html">Model Training for Pneumonia Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yolov8_custom_dataset.html">Train YOLOv8 on a Custom Dataset using CLI</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Specializing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../specializing.html">Specializing a pre-trained Model</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../specializing/resnet_transfer_learning.html">Re-training a model using PyTorch and Transfer Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../specializing/finetune_distilbert.html">DistilBERT for Sentiment Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../specializing/llama3-fine-tuning.html">Fine-tune Llama 3.2 to generate Markdown friendly Python functions</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimizing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../optimizing.html">Optimizing Computation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Model Serving</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../serving.html">Model Serving</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contribute</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING.html">Contributing to AUP AI Tutorials</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/train/fashion_mnist_cnn.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Machine Learning Training and Inference with PyTorch</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supported-hardware">🛠️ Supported Hardware</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-software-environment">⚡ Recommended Software Environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">🎯 Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-packages">Import Packages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-data">Understanding the data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-for-training-and-inference">Load data for training and inference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-dataloaders">Create dataloaders</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualize-fashionmnist-dataset-classes">Visualize FashionMNIST dataset classes.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-cnn-model">Building a CNN Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instantiate-the-model">Instantiate the Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-model">Train Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#set-hyperparameters-and-loss-function">Set hyperparameters and loss function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-a-network-and-testing-it-on-test-dataset">Training a network and testing it on test dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-loss-and-accuracy-with-iterations">Visualizing the Loss and Accuracy with Iterations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#save-pytorch-model">Save PyTorch model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#measure-accuracy-on-entire-test-set">Measure accuracy on entire test set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confusion-matrix">Confusion Matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#display-any-mis-classifications">Display any Mis-classifications</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="machine-learning-training-and-inference-with-pytorch">
+<h1>Machine Learning Training and Inference with PyTorch<a class="headerlink" href="#machine-learning-training-and-inference-with-pytorch" title="Link to this heading">#</a></h1>
+<p>This notebook demonstrate a Pytorch ML flow for training and inference on CPU.</p>
+<p>We will train a model to <strong>classify grayscale images</strong> of clothing items in the <strong>Fashion-MNIST</strong> dataset.
+We are going to use your <strong>CPU</strong> to inference new images unseen during the training process and classify per clothing item class.</p>
+<section id="supported-hardware">
+<h2>🛠️ Supported Hardware<a class="headerlink" href="#supported-hardware" title="Link to this heading">#</a></h2>
+<p>This notebook can run in a CPU or in a GPU.</p>
+<p>✅ AMD Instinct™ Accelerators<br />
+✅ AMD Radeon™ RX/PRO Graphics Cards<br />
+✅ AMD EPYC™ Processors<br />
+✅ AMD Ryzen™ (AI) Processors</p>
+<p>Suggested hardware: <strong>AI PC powered by AMD Ryzen™ AI Processors</strong></p>
+</section>
+<section id="recommended-software-environment">
+<h2>⚡ Recommended Software Environment<a class="headerlink" href="#recommended-software-environment" title="Link to this heading">#</a></h2>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Linux</label><div class="sd-tab-content docutils">
+<ul class="simple">
+<li><p><a class="reference external" href="https://amdresearch.github.io/aup-ai-tutorials//env/env-gpu.html">Install Docker container</a></p></li>
+<li><p><a class="reference external" href="https://amdresearch.github.io/aup-ai-tutorials//env/env-cpu.html">Install PyTorch</a></p></li>
+</ul>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+Windows</label><div class="sd-tab-content docutils">
+<ul class="simple">
+<li><p><a class="reference external" href="https://amdresearch.github.io/aup-ai-tutorials//env/env-gpu-windows.html">Install Direct-ML</a></p></li>
+<li><p><a class="reference external" href="https://amdresearch.github.io/aup-ai-tutorials//env/env-cpu.html">Install PyTorch</a></p></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="goals">
+<h2>🎯 Goals<a class="headerlink" href="#goals" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Define a neural network architecture using PyTorch</p></li>
+<li><p>Train a neural network model to classify images from the Fashion-MNIST dataset</p></li>
+<li><p>Evaluate the model performance using a confusion matrix</p></li>
+</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><strong><a class="reference external" href="https://matplotlib.org/stable/gallery/axes_grid1/simple_axesgrid.html">Matplotlib Gallery</a></strong><br />
+Explore various examples of how to use Matplotlib for visualizations.</p></li>
+<li><p><strong><a class="reference external" href="https://github.com/zalandoresearch/fashion-mnist">Fashion-MNIST</a></strong><br />
+Access the dataset for training and testing fashion classification models.</p></li>
+<li><p><strong><a class="reference external" href="https://christianbernecker.medium.com/how-to-create-a-confusion-matrix-in-pytorch-38d06a7f04b7">Confusion Matrix</a></strong><br />
+Learn how to create and interpret confusion matrices in PyTorch.</p></li>
+<li><p><strong><a class="reference external" href="https://pytorch.org/docs/stable/index.html">PyTorch Official Documentation</a></strong><br />
+Comprehensive guide and API reference for using PyTorch effectively.</p></li>
+<li><p><strong><a class="reference external" href="https://pytorch.org/tutorials/beginner/nn_tutorial.html">Best Practices for Training Neural Networks</a></strong><br />
+A tutorial on best practices for training neural networks using PyTorch.
+``</p></li>
+</ul>
+</div>
+</section>
+<section id="import-packages">
+<h2>Import Packages<a class="headerlink" href="#import-packages" title="Link to this heading">#</a></h2>
+<p>Run the following cell to import all the necessary packages to be able to run training and inference in the Ryzen AI CPU.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageGrid</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.autograd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Variable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torchvision</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torchvision.transforms</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">transforms</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">accuracy_score</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sn</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="understanding-the-data">
+<h2>Understanding the data<a class="headerlink" href="#understanding-the-data" title="Link to this heading">#</a></h2>
+<p>We’ll a train model on the <a class="reference external" href="https://github.com/zalandoresearch/fashion-mnist">Fashion MNIST</a> dataset. This consists of 70,000 grayscale images (28x28). Each image is associated with one of 10 classes. The dataset was split by the creators; there are 60,000 training images and 10,000 test images.</p>
+<p>Fashion MNIST classes:</p>
+<ul class="simple">
+<li><p>T-shirt/top</p></li>
+<li><p>Trouser</p></li>
+<li><p>Pullover</p></li>
+<li><p>Dress</p></li>
+<li><p>Coat</p></li>
+<li><p>Sandal</p></li>
+<li><p>Shirt</p></li>
+<li><p>Sneaker</p></li>
+<li><p>Bag</p></li>
+<li><p>Ankle boot</p></li>
+</ul>
+<section id="load-data-for-training-and-inference">
+<h3>Load data for training and inference<a class="headerlink" href="#load-data-for-training-and-inference" title="Link to this heading">#</a></h3>
+<p>First, we load the train set, we define the directory where to store and force to be downloaded, we also transform the images to tensors.
+After this, we load the test set, with very similar arguments.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_set</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">FashionMNIST</span><span class="p">(</span>
+    <span class="s2">&quot;datasets/mnist&quot;</span><span class="p">,</span>
+    <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">transform</span><span class="o">=</span><span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span><span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">()])</span>
+<span class="p">)</span>
+
+<span class="n">test_set</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">FashionMNIST</span><span class="p">(</span>
+    <span class="s2">&quot;datasets/mnist&quot;</span><span class="p">,</span>
+    <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">train</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">transform</span><span class="o">=</span><span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span><span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">()])</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="create-dataloaders">
+<h3>Create dataloaders<a class="headerlink" href="#create-dataloaders" title="Link to this heading">#</a></h3>
+<p>Once the data and test sets are loaded, we create a train and a test <code class="docutils literal notranslate"><span class="pre">Dataloader</span></code>s to iterate over the images at training time. We pass the set and the batch size.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">train_set</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span>
+<span class="p">)</span>
+
+<span class="n">test_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">test_set</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualize-fashionmnist-dataset-classes">
+<h3>Visualize FashionMNIST dataset classes.<a class="headerlink" href="#visualize-fashionmnist-dataset-classes" title="Link to this heading">#</a></h3>
+<p>We create a method that return the name of class for the label number. e.g., if the label is 5, we return Sandal.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">output_label</span><span class="p">(</span><span class="n">label</span><span class="p">):</span>
+    <span class="n">output_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;T-shirt/Top&quot;</span><span class="p">,</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;Trouser&quot;</span><span class="p">,</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;Pullover&quot;</span><span class="p">,</span>
+        <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;Dress&quot;</span><span class="p">,</span>
+        <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;Coat&quot;</span><span class="p">,</span> 
+        <span class="mi">5</span><span class="p">:</span> <span class="s2">&quot;Sandal&quot;</span><span class="p">,</span> 
+        <span class="mi">6</span><span class="p">:</span> <span class="s2">&quot;Shirt&quot;</span><span class="p">,</span>
+        <span class="mi">7</span><span class="p">:</span> <span class="s2">&quot;Sneaker&quot;</span><span class="p">,</span>
+        <span class="mi">8</span><span class="p">:</span> <span class="s2">&quot;Bag&quot;</span><span class="p">,</span>
+        <span class="mi">9</span><span class="p">:</span> <span class="s2">&quot;Ankle Boot&quot;</span>
+    <span class="p">}</span>
+    <span class="nb">input</span> <span class="o">=</span> <span class="p">(</span><span class="n">label</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="k">else</span> <span class="n">label</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_mapping</span><span class="p">[</span><span class="nb">input</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;torch.Tensor&#39;&gt; &lt;class &#39;torch.Tensor&#39;&gt;
+torch.Size([100, 1, 28, 28]) torch.Size([100])
+labels:  Ankle Boot, T-shirt/Top, T-shirt/Top, Dress, T-shirt/Top, Pullover, Sneaker, Pullover, Sandal, Sandal, T-shirt/Top, Ankle Boot, Sandal, Sandal, Sneaker, Ankle Boot, Trouser, T-shirt/Top, Shirt, Coat, Dress, Trouser, Coat, Bag, Coat, Dress, T-shirt/Top, Pullover, Coat, Coat, Sandal, Dress, Shirt, Shirt, T-shirt/Top, Bag, Sandal, Pullover, Trouser, Shirt, Shirt, Sneaker, Ankle Boot, Sandal, Ankle Boot, Pullover, Sneaker, Dress, T-shirt/Top, Dress, Dress, Dress, Sneaker, Pullover, Pullover, Shirt, Shirt, Bag, Dress, Dress, Sandal, T-shirt/Top, Sandal, Sandal, T-shirt/Top, Pullover, T-shirt/Top, T-shirt/Top, Coat, Trouser, Dress, Trouser, Shirt, Dress, Trouser, Coat, Coat, Shirt, Trouser, Ankle Boot, Trouser, Dress, Sandal, Sneaker, Ankle Boot, Sneaker, Trouser, Sneaker, Ankle Boot, Ankle Boot, Ankle Boot, Dress, Pullover, Ankle Boot, Dress, Shirt, Coat, Trouser, Trouser, Bag, 
+</pre></div>
+</div>
+<img alt="../_images/bdaacfa6892a4da75a352bd4583f32d535149adad3066977efa186761c66e3a7.png" src="../_images/bdaacfa6892a4da75a352bd4583f32d535149adad3066977efa186761c66e3a7.png" />
+</div>
+</div>
+<p>Display a single batch of training data, we unpack the images and labels of a batch by calling <code class="docutils literal notranslate"><span class="pre">next</span></code> and <code class="docutils literal notranslate"><span class="pre">iter``on</span> <span class="pre">the</span> </code>train_loader`, then we print the type of the images and labels. Finally, we display the shapes of the images and labels.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">images</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">train_loader</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">images</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We visualize in a grid the images we got from the <code class="docutils literal notranslate"><span class="pre">train_loader</span></code>. We also print the class names for each label in the batch</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">make_grid</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">nrow</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;labels: &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">output_label</span><span class="p">(</span><span class="n">label</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;, &quot;</span><span class="p">)</span> \
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="building-a-cnn-model">
+<h2>Building a CNN Model<a class="headerlink" href="#building-a-cnn-model" title="Link to this heading">#</a></h2>
+<p>We create our <code class="docutils literal notranslate"><span class="pre">FashionCNN</span></code> by deriving from <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> which is a super class for all the neural networks in Pytorch.</p>
+<p>We define a nNeural network that has the following layers:</p>
+<ul class="simple">
+<li><p>Two Sequential layers each consists of following layers:</p>
+<ul>
+<li><p>Convolution layer that has kernel size of 3 * 3, padding = 1 (zero_padding) in 1st layer and padding = 0 in second one. Stride of 1 in both layer</p></li>
+<li><p>Batch Normalization layer</p></li>
+<li><p>A ReLU activation function</p></li>
+<li><p>Max Pooling layer with kernel size of 2 * 2 and stride 2</p></li>
+</ul>
+</li>
+<li><p>After these two convolutional layers we define:</p>
+<ul>
+<li><p>Flatten out the output for dense layer(a.k.a. fully connected layer)</p></li>
+<li><p>3 Fully connected layers with different input and output features maps</p></li>
+<li><p>1 Dropout layer that has class probability p = 0.25</p></li>
+</ul>
+</li>
+</ul>
+<p>All the functionality is given in the forward method that defines the forward pass of our CNN</p>
+<ul class="simple">
+<li><p>Our input image is changing in a following way:</p></li>
+<li><p>First convolution layer: input: 28 * 28 * 3, output: 28 * 28 * 32</p></li>
+<li><p>First Max Pooling layer: input: 28 * 28 * 32, output: 14 * 14 * 32</p></li>
+<li><p>Second convolution layer: input : 14 * 14 * 32, output: 12 * 12 * 64</p></li>
+<li><p>Second Max Pooling layer: 12 * 12 * 64, output:  6 * 6 * 64</p></li>
+<li><p>Final fully connected layer has 10 output features for 10 types of clothes</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">FashionCNN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FashionCNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">64</span><span class="o">*</span><span class="mi">6</span><span class="o">*</span><span class="mi">6</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout2d</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass gets executed every time we call the model&quot;&quot;&quot;</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer2</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">flatten</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">flatten</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">return</span>  <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="instantiate-the-model">
+<h2>Instantiate the Model<a class="headerlink" href="#instantiate-the-model" title="Link to this heading">#</a></h2>
+<p>Once the model is defined, we can create an instance of the CNN model defined for FashionMNIST classification</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">FashionCNN</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="train-model">
+<h2>Train Model<a class="headerlink" href="#train-model" title="Link to this heading">#</a></h2>
+<p>After the model is instantiate we can train the model</p>
+<section id="set-hyperparameters-and-loss-function">
+<h3>Set hyperparameters and loss function<a class="headerlink" href="#set-hyperparameters-and-loss-function" title="Link to this heading">#</a></h3>
+<p>Training the model is the process of making the model learn from the training dataset, setting the training parameters is a very important process as it will define how fast our model learns and if the process is stable. This process is sometimes referred as <code class="docutils literal notranslate"><span class="pre">hyperparameter</span></code> tunning.</p>
+<p>The process involves</p>
+<ul class="simple">
+<li><p>Defining a loss function. we’re using <code class="docutils literal notranslate"><span class="pre">CrossEntropyLoss()</span></code></p></li>
+<li><p>Defining a learning rate, this is the weight that is used to update the model</p></li>
+<li><p>Defining an optimization technique, we are using the <code class="docutils literal notranslate"><span class="pre">Adam</span></code> algorithm</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">error</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FashionCNN(
+  (layer1): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  )
+  (layer2): Sequential(
+    (0): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1))
+    (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  )
+  (fc1): Linear(in_features=2304, out_features=600, bias=True)
+  (drop): Dropout2d(p=0.25, inplace=False)
+  (fc2): Linear(in_features=600, out_features=120, bias=True)
+  (fc3): Linear(in_features=120, out_features=10, bias=True)
+)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="training-a-network-and-testing-it-on-test-dataset">
+<h3>Training a network and testing it on test dataset<a class="headerlink" href="#training-a-network-and-testing-it-on-test-dataset" title="Link to this heading">#</a></h3>
+<p>To train the network, we will setup the number of epochs for training. We create a few lists to keep the progress of the training loop.</p>
+<p>For each epoch, we first iterate over the <code class="docutils literal notranslate"><span class="pre">train_loader</span></code>, were first we reshape the images to be of the dimension the model expects. Then we run the images through the model and we get the predictions, the nwe calculate the loss comparing the predicted labels with the actual labels, after this we reset the optimizer and run back propagation and apply the optimization.</p>
+<p>We also test the model at regular intervals during training, we do a similar process, we iterate over the <code class="docutils literal notranslate"><span class="pre">test_loader</span></code> and count the correct number of predictions. We also keep track of the results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">loss_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">iteration_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">accuracy_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">predictions_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">labels_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">images</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">train_loader</span><span class="p">:</span>
+        <span class="n">train</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">count</span> <span class="o">%</span> <span class="mi">50</span><span class="p">):</span>
+            <span class="n">total</span><span class="p">,</span> <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">images</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">test_loader</span><span class="p">:</span>
+                <span class="n">labels_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+                <span class="n">test</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+                <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+
+                <span class="n">predictions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">predictions_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+                <span class="n">correct</span> <span class="o">+=</span> <span class="p">(</span><span class="n">predictions</span> <span class="o">==</span> <span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+                <span class="n">total</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+
+            <span class="n">accuracy</span> <span class="o">=</span> <span class="n">correct</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">total</span>
+            <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">iteration_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+            <span class="n">accuracy_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">count</span> <span class="o">%</span> <span class="mi">500</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Iteration: </span><span class="si">{}</span><span class="s2">, Loss: </span><span class="si">{}</span><span class="s2">, Accuracy: </span><span class="si">{}</span><span class="s2">%&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration: 500, Loss: 0.49585863947868347, Accuracy: 87.81999969482422%
+Iteration: 1000, Loss: 0.36215996742248535, Accuracy: 87.58999633789062%
+Iteration: 1500, Loss: 0.2785225808620453, Accuracy: 88.93000030517578%
+Iteration: 2000, Loss: 0.2172258198261261, Accuracy: 89.05000305175781%
+Iteration: 2500, Loss: 0.1593465358018875, Accuracy: 89.48999786376953%
+Iteration: 3000, Loss: 0.1814488172531128, Accuracy: 89.94000244140625%
+Iteration: 3500, Loss: 0.22667889297008514, Accuracy: 90.62999725341797%
+Iteration: 4000, Loss: 0.21219101548194885, Accuracy: 90.27999877929688%
+Iteration: 4500, Loss: 0.11486653983592987, Accuracy: 89.63999938964844%
+Iteration: 5000, Loss: 0.28773391246795654, Accuracy: 90.31999969482422%
+Iteration: 5500, Loss: 0.17376042902469635, Accuracy: 89.7300033569336%
+Iteration: 6000, Loss: 0.11793597042560577, Accuracy: 89.9800033569336%
+Iteration: 6500, Loss: 0.15039579570293427, Accuracy: 90.88999938964844%
+Iteration: 7000, Loss: 0.14833183586597443, Accuracy: 90.0999984741211%
+Iteration: 7500, Loss: 0.09823083132505417, Accuracy: 90.08000183105469%
+Iteration: 8000, Loss: 0.19450557231903076, Accuracy: 89.48999786376953%
+Iteration: 8500, Loss: 0.08682500571012497, Accuracy: 88.86000061035156%
+Iteration: 9000, Loss: 0.08014271408319473, Accuracy: 89.72000122070312%
+Iteration: 9500, Loss: 0.0846291333436966, Accuracy: 89.94000244140625%
+Iteration: 10000, Loss: 0.11860056966543198, Accuracy: 89.81999969482422%
+Iteration: 10500, Loss: 0.06648197770118713, Accuracy: 89.20999908447266%
+Iteration: 11000, Loss: 0.11870399117469788, Accuracy: 89.44999694824219%
+Iteration: 11500, Loss: 0.08761297911405563, Accuracy: 90.08999633789062%
+Iteration: 12000, Loss: 0.07780689001083374, Accuracy: 89.44999694824219%
+Iteration: 12500, Loss: 0.07163543999195099, Accuracy: 89.62000274658203%
+Iteration: 13000, Loss: 0.11378370225429535, Accuracy: 89.33999633789062%
+Iteration: 13500, Loss: 0.02328476868569851, Accuracy: 89.66000366210938%
+Iteration: 14000, Loss: 0.19038330018520355, Accuracy: 89.97000122070312%
+Iteration: 14500, Loss: 0.047670263797044754, Accuracy: 90.04000091552734%
+Iteration: 15000, Loss: 0.06925900280475616, Accuracy: 89.01000213623047%
+Iteration: 15500, Loss: 0.03474210575222969, Accuracy: 90.30999755859375%
+Iteration: 16000, Loss: 0.10600525885820389, Accuracy: 89.69999694824219%
+Iteration: 16500, Loss: 0.01568971574306488, Accuracy: 89.81999969482422%
+Iteration: 17000, Loss: 0.2159990817308426, Accuracy: 89.02999877929688%
+Iteration: 17500, Loss: 0.022130180150270462, Accuracy: 89.80000305175781%
+Iteration: 18000, Loss: 0.126486137509346, Accuracy: 89.08000183105469%
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualizing-the-loss-and-accuracy-with-iterations">
+<h3>Visualizing the Loss and Accuracy with Iterations<a class="headerlink" href="#visualizing-the-loss-and-accuracy-with-iterations" title="Link to this heading">#</a></h3>
+<p>After the training, we visualize the loss training progress</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iteration_list</span><span class="p">,</span> <span class="n">loss_list</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;No. of Iteration&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Iterations vs Loss&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/7515cb616893b4855cf9d91e5f967af9c3f42dbbb6001809f873258b84609d22.png" src="../_images/7515cb616893b4855cf9d91e5f967af9c3f42dbbb6001809f873258b84609d22.png" />
+</div>
+</div>
+<p>We are going going to visualize the accuracy progress</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iteration_list</span><span class="p">,</span> <span class="n">accuracy_list</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;No. of Iteration&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Accuracy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Iterations vs Accuracy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/195c5ad1f564a8ca1c6b6017a6bcb5032db69798b293b30e23dfd303ca2914e7.png" src="../_images/195c5ad1f564a8ca1c6b6017a6bcb5032db69798b293b30e23dfd303ca2914e7.png" />
+</div>
+</div>
+</section>
+<section id="save-pytorch-model">
+<h3>Save PyTorch model<a class="headerlink" href="#save-pytorch-model" title="Link to this heading">#</a></h3>
+<p>Once we are happy with the model, we can save it so we do not need to retrain it later on</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="s1">&#39;models/fashion-mnist.pt&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="measure-accuracy-on-entire-test-set">
+<h2>Measure accuracy on entire test set<a class="headerlink" href="#measure-accuracy-on-entire-test-set" title="Link to this heading">#</a></h2>
+<p>We are going to use the 10,000 images from the test set to classify them with our trained model. We calculate the accuracy of the fashion-mnist model on the CPU.</p>
+<p>We create a few list to keep the progress of the accuracy computation. Then, we iterate over each image in the test set, we keep track of the actual label, we add the batch dimension to the image and run the inference with the model. Then, we apply a softmax to pick the top probability as the classification and we track the predicted class. We then check if the prediction was correct or not and track it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_images</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_set</span><span class="p">)</span>
+
+<span class="n">cm_predicted_labels</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">cm_actual_labels</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">misclassified_images</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">misclassified_labels</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">correctly_classified_images</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_images</span><span class="p">):</span>
+    <span class="n">img</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">test_set</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">cm_actual_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_label</span><span class="p">(</span><span class="n">label</span><span class="p">))</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">softmax_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">predicted_class</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">softmax_probs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="n">cm_predicted_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_label</span><span class="p">(</span><span class="n">predicted_class</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">label</span> <span class="o">!=</span> <span class="n">predicted_class</span><span class="p">:</span>
+        <span class="n">misclassified_images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">misclassified_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_label</span><span class="p">(</span><span class="n">predicted_class</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">correctly_classified_images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we can print the corrected classified images and the accuracy on images that the model did not see during training.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total correctly classified images: </span><span class="si">{</span><span class="n">num_images</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">misclassified_images</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; Accuracy of the model for the test set is : </span><span class="si">{</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">cm_actual_labels</span><span class="p">,</span><span class="w"> </span><span class="n">cm_predicted_labels</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> %&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total correctly classified images: 8348
+Total misclassified images: 1652
+</pre></div>
+</div>
+<img alt="../_images/95084bd096e1aef565d1dd41020ba6979956813edc6e341abea6506bd0301bdf.png" src="../_images/95084bd096e1aef565d1dd41020ba6979956813edc6e341abea6506bd0301bdf.png" />
+</div>
+</div>
+<p>We can also visualize the results of correct classification</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_imlist_correct</span> <span class="o">=</span> <span class="p">[</span><span class="n">test_set</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">correctly_classified_images</span><span class="p">[:</span><span class="mi">10</span><span class="p">]]</span>
+<span class="n">num_correct</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">show_imlist_correct</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">num_correct</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">ImageGrid</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="n">nrows_ncols</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_correct</span><span class="p">),</span> <span class="n">axes_pad</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="c1"># Loop through the grid and display the correctly classified images</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">correct_idx</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">show_imlist_correct</span><span class="p">,</span> <span class="n">correctly_classified_images</span><span class="p">[:</span><span class="n">num_correct</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+    <span class="n">predicted_label</span> <span class="o">=</span> <span class="n">cm_predicted_labels</span><span class="p">[</span><span class="n">correct_idx</span><span class="p">]</span>
+    <span class="n">actual_label</span> <span class="o">=</span> <span class="n">output_label</span><span class="p">(</span><span class="n">test_set</span><span class="p">[</span><span class="n">correct_idx</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>  <span class="c1"># Display image in grayscale</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pred: </span><span class="si">{</span><span class="n">predicted_label</span><span class="si">}</span><span class="se">\n</span><span class="s2">True: </span><span class="si">{</span><span class="n">actual_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Accuracy of the quantized model for the test set is : 83.48 %
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="confusion-matrix">
+<h2>Confusion Matrix<a class="headerlink" href="#confusion-matrix" title="Link to this heading">#</a></h2>
+<p>We create the confusion matrix and display it.</p>
+<p>The X-axis represents the predicted class and the Y-axis represents the actual class.</p>
+<p>The diagonal cells show true positives, they show how many instances of each class were correctly predicted by the model.
+The off-diagonal cells show instances where the predicted class did not match the actual class.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cf_matrix</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">cm_actual_labels</span><span class="p">,</span> <span class="n">cm_predicted_labels</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cf_matrix</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cf_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                  <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">output_label</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)],</span>
+                  <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">output_label</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)])</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">sn</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;cividis&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="../_images/4449ddbd74e7cd07512b1da786ab8c178dca74fd696a75a04ffa0bfa777e418a.png" src="../_images/4449ddbd74e7cd07512b1da786ab8c178dca74fd696a75a04ffa0bfa777e418a.png" />
+</div>
+</div>
+</section>
+<section id="display-any-mis-classifications">
+<h2>Display any Mis-classifications<a class="headerlink" href="#display-any-mis-classifications" title="Link to this heading">#</a></h2>
+<p>Finally, we can also display some images that were mis-classified</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total misclassified images: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">misclassified_images</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">show_imlist_mis</span> <span class="o">=</span> <span class="p">[</span><span class="n">test_set</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">misclassified_images</span><span class="p">[:</span><span class="mi">5</span><span class="p">]]</span>
+<span class="n">num_misclassified</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">show_imlist_mis</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">num_misclassified</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">ImageGrid</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="n">nrows_ncols</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_misclassified</span><span class="p">),</span> <span class="n">axes_pad</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">mis_idx</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">show_imlist_mis</span><span class="p">,</span> <span class="n">misclassified_images</span><span class="p">[:</span><span class="n">num_misclassified</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>  <span class="c1"># Changed the colormap to &#39;gray&#39; for better visual</span>
+    <span class="n">predicted_label</span> <span class="o">=</span> <span class="n">misclassified_labels</span><span class="p">[</span><span class="n">misclassified_images</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">mis_idx</span><span class="p">)]</span>
+    <span class="n">actual_label</span> <span class="o">=</span> <span class="n">output_label</span><span class="p">(</span><span class="n">test_set</span><span class="p">[</span><span class="n">mis_idx</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pred: </span><span class="si">{</span><span class="n">predicted_label</span><span class="si">}</span><span class="se">\n</span><span class="s2">True: </span><span class="si">{</span><span class="n">actual_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total misclassified images: 1652
+</pre></div>
+</div>
+<img alt="../_images/be7d05ef420fa38157403f74636445a63240a23996d3a41202f0dc011c09eee1.png" src="../_images/be7d05ef420fa38157403f74636445a63240a23996d3a41202f0dc011c09eee1.png" />
+</div>
+</div>
+<hr class="docutils" />
+<p>Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.</p>
+<p>SPDX-License-Identifier: MIT</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./train"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="mandelbrot_train.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Mandelbrot Multi-Layer Perceptron Model</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="pneumonia_detection_pt.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Model Training for Pneumonia Detection</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supported-hardware">🛠️ Supported Hardware</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-software-environment">⚡ Recommended Software Environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">🎯 Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-packages">Import Packages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-data">Understanding the data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-for-training-and-inference">Load data for training and inference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-dataloaders">Create dataloaders</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualize-fashionmnist-dataset-classes">Visualize FashionMNIST dataset classes.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-cnn-model">Building a CNN Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instantiate-the-model">Instantiate the Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-model">Train Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#set-hyperparameters-and-loss-function">Set hyperparameters and loss function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-a-network-and-testing-it-on-test-dataset">Training a network and testing it on test dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-loss-and-accuracy-with-iterations">Visualizing the Loss and Accuracy with Iterations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#save-pytorch-model">Save PyTorch model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#measure-accuracy-on-entire-test-set">Measure accuracy on entire test set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confusion-matrix">Confusion Matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#display-any-mis-classifications">Display any Mis-classifications</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Advanced Micro Devices, Inc.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <p>
+<div class="aem-Grid aem-Grid--16">
+<div class="aem-GridColumn aem-GridColumn--xxxlarge--none aem-GridColumn--xsmall--16 aem-GridColumn--offset--xsmall--0 aem-GridColumn--xlarge--none aem-GridColumn--xxlarge--none aem-GridColumn--default--none aem-GridColumn--offset--large--1 aem-GridColumn--xlarge--12 aem-GridColumn--offset--default--0 aem-GridColumn--xxlarge--10 aem-GridColumn--offset--xlarge--2 aem-GridColumn--offset--xxlarge--3 aem-GridColumn--offset--xxxlarge--4 aem-GridColumn--xsmall--none aem-GridColumn--large--none aem-GridColumn aem-GridColumn--large--14 aem-GridColumn--xxxlarge--8 aem-GridColumn--default--16">
+<div class="container-fluid sub-footer">
+
+<div class="row">
+<div class="col-xs-24">
+<p><a target="_blank" href="https://www.amd.com/en/corporate/copyright">Terms and Conditions</a> | <a target="_blank" href="https://www.amd.com/en/corporate/privacy">Privacy</a> | <a target="_blank" href="https://www.amd.com/en/corporate/cookies">Cookie Policy</a> | <a target="_blank" href="https://www.amd.com/en/corporate/trademarks">Trademarks</a> | <a target="_blank" href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf">Statement on Forced Labor</a> | <a target="_blank" href="https://www.amd.com/en/corporate/competition">Fair and Open Competition</a> <br> <a target="_blank" href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf">UK Tax Strategy</a> | <a target="_blank" href="https://docs.xilinx.com/v/u/9x6YvZKuWyhJId7y7RQQKA">Inclusive Terminology</a> | <a href="#cookiessettings" class="ot-sdk-show-settings">Cookies Settings</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="cookie-consent" class="cookie-consent">
+<p>This website uses cookies to ensure you get the best experience on our website. <a href="#" id="cookie-accept">Accept</a> | <a href="#" id="cookie-reject">Reject</a></p>
+</div>
+</p>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

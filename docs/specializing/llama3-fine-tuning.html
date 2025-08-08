@@ -1,0 +1,2504 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Fine-tune Llama 3.2 to generate Markdown friendly Python functions &#8212; AUP AI Tutorials</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'specializing/llama3-fine-tuning';</script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Optimizing Computation" href="../optimizing.html" />
+    <link rel="prev" title="DistilBERT for Sentiment Analysis" href="finetune_distilbert.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">AUP AI Tutorials</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    AUP AI Tutorials
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Paths</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../paths.html">Organization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">AI Fundamentals</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../fundamentals.html">Artificial Intelligence Fundamentals</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../fundamentals/math-fundamentals.html">Mathematics for AI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fundamentals/ml-fundamentals.html">Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fundamentals/genai-fundamentals.html">Generative AI</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Setup Environment</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../env/env.html">Configuring the Environment</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../env/env-cpu.html">Setting PyTorch Environment for CPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env/env-gpu.html">Setting PyTorch Environment for GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env/env-gpu-windows.html">Setting PyTorch Environment for GPU</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../get-started.html">Get Started with AI on AMD Platforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../get-started/hf.html">Using Hugging Face pre-trained models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/mnist-mlp.html">MNIST Classification with an MLP Hugging Face Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/semantic-segmentation.html">Semantic Segmentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/yolov10.html">Image Classification using Yolov10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/flan-t5-small.html">Fine-tuned LAnguage Net Text-To-Text Transfer Transformer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/gemma2.html">Google Enhanced Multimodal Machine Learning 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/whisper.html">OpenAI Whisper - Speech Recognition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/phi-3-vision.html">Phi-3-vision Instruct Open Multimodal Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/hf/phi-3-mini-instruct.html">Phi-3 Instruct Open Model</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../get-started/pytorch.html">Using PyTorch Hub Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/pytorch/lenet.html">LetNet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get-started/pytorch/resnet50.html">Residual Network - ResNet50</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../get-started/genai.html">Generative AI on AMD platforms</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Design your own Model</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../design-model.html">Design your own model on AMD Platforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../train/mandelbrot_dataset.html">Create Mandelbrot Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../train/mandelbrot_train.html">Mandelbrot Multi-Layer Perceptron Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../train/fashion_mnist_cnn.html">Machine Learning Training and Inference with PyTorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../train/pneumonia_detection_pt.html">Model Training for Pneumonia Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../train/yolov8_custom_dataset.html">Train YOLOv8 on a Custom Dataset using CLI</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Specializing</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../specializing.html">Specializing a pre-trained Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="resnet_transfer_learning.html">Re-training a model using PyTorch and Transfer Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finetune_distilbert.html">DistilBERT for Sentiment Analysis</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Fine-tune Llama 3.2 to generate Markdown friendly Python functions</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimizing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../optimizing.html">Optimizing Computation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Model Serving</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../serving.html">Model Serving</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contribute</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING.html">Contributing to AUP AI Tutorials</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/specializing/llama3-fine-tuning.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Fine-tune Llama 3.2 to generate Markdown friendly Python functions</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supported-hardware">🛠️ Supported Hardware</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-software-environment">⚡ Recommended Software Environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">🎯 Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-the-model-and-tokenizer">Get the Model and Tokenizer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-prompt">Sample Prompt</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-fine-tune-parameters">Define fine-tune parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-dataset-to-fine-tune-model">Get Dataset to fine-tune model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fine-tune-the-adapted-model">🚀 Fine-tune the Adapted Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluate-fine-tuned-model">Evaluate Fine-tuned Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="fine-tune-llama-3-2-to-generate-markdown-friendly-python-functions">
+<h1>Fine-tune Llama 3.2 to generate Markdown friendly Python functions<a class="headerlink" href="#fine-tune-llama-3-2-to-generate-markdown-friendly-python-functions" title="Link to this heading">#</a></h1>
+<p>In this notebook, we are going to fine tune a Llama 3.2 1B model using QLORA and the <a class="reference external" href="https://huggingface.co/datasets/google-research-datasets/mbpp">Google Mostly Basic Python Problems</a> dataset.</p>
+<section id="supported-hardware">
+<h2>🛠️ Supported Hardware<a class="headerlink" href="#supported-hardware" title="Link to this heading">#</a></h2>
+<p>This notebook can run in a CPU or in a GPU.</p>
+<p>✅ AMD Instinct™ Accelerators<br />
+✅ AMD Radeon™ RX/PRO Graphics Cards</p>
+<p>Suggested hardware: <strong>AMD Instinct™ Accelerators</strong>, this notebook may not run in a CPU if your system does not have enough memory.</p>
+</section>
+<section id="recommended-software-environment">
+<h2>⚡ Recommended Software Environment<a class="headerlink" href="#recommended-software-environment" title="Link to this heading">#</a></h2>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Linux</label><div class="sd-tab-content docutils">
+<ul class="simple">
+<li><p><a class="reference external" href="https://amdresearch.github.io/aup-ai-tutorials//env/env-gpu.html">Install Docker container</a></p></li>
+<li><p><a class="reference external" href="https://amdresearch.github.io/aup-ai-tutorials//env/env-cpu.html">Install PyTorch</a></p></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="goals">
+<h2>🎯 Goals<a class="headerlink" href="#goals" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Specialize a model using fine tuning</p></li>
+<li><p>Quantize the model using BitsandBytes</p></li>
+<li><p>Define QLoRa parameters</p></li>
+<li><p>Fine tune using SFTTrainer</p></li>
+</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p>This notebook is partially based on the <a class="reference external" href="https://www.fluidnumerics.com/">FluidNumerics</a> webinar.</p></li>
+<li><p><a class="reference external" href="https://webinar.amd.com/Fine-Tuning-Llama-3-on-AMD-Radeon-GPUs/en">Fine Tuning Llama 3 on AMD Radeon GPUs</a></p></li>
+<li><p><a class="reference external" href="https://github.com/FluidNumerics/amd-ml-examples/blob/main/fine-tuning-llama-3/train-single-gpu.ipynb">Fine-Tuning Llama-3 on AMD Radeon GPU</a></p></li>
+<li><p><a class="reference external" href="https://huggingface.co/docs/bitsandbytes/main/en/index">bitsandbytes</a> is a Python wrapper library that offers fast and efficient 8-bit quantization of machine learning models.</p></li>
+<li><p><a class="reference external" href="https://huggingface.co/docs/peft/en/index">Parameter-Efficient Fine-Tuning</a></p></li>
+</ul>
+</div>
+</section>
+<section id="get-the-model-and-tokenizer">
+<h2>Get the Model and Tokenizer<a class="headerlink" href="#get-the-model-and-tokenizer" title="Link to this heading">#</a></h2>
+<p>Import some of the necessary packages</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">argmax</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">BitsAndBytesConfig</span><span class="p">,</span> <span class="n">LlamaForCausalLM</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">TrainingArguments</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">peft</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoraConfig</span><span class="p">,</span> <span class="n">get_peft_model</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">evaluate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trl</span><span class="w"> </span><span class="kn">import</span> <span class="n">SFTConfig</span><span class="p">,</span> <span class="n">SFTTrainer</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Select GPU if available, note that a consumer CPU may not be able to fine-tune this model if it does not have enough VRAM memory.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Using a GPU with large memory is recommended.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Device: </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">device</span> <span class="o">==</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Device name: </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">get_device_name</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;GPU available memory: </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">mem_get_info</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">1024</span><span class="o">/</span><span class="mi">1024</span><span class="o">//</span><span class="mi">1024</span><span class="si">}</span><span class="s1"> GB&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Device: cuda
+Device name: AMD Instinct MI210
+GPU available memory: 63.0 GB
+</pre></div>
+</div>
+</div>
+</div>
+<p>Define the model id from HuggingFace, Llama 3.2 1 Billion parameter model. Get the <a class="reference external" href="https://huggingface.co/docs/transformers/v4.46.0/en/model_doc/auto#transformers.AutoTokenizer">tokenizer</a> and set padding token to the <code class="docutils literal notranslate"><span class="pre">EOS</span></code> token. Also, set <code class="docutils literal notranslate"><span class="pre">padding_side</span></code> to right.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_id</span> <span class="o">=</span> <span class="s1">&#39;unsloth/Llama-3.2-1B&#39;</span>
+
+<span class="n">my_tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">path_to_model</span><span class="p">)</span>
+<span class="n">my_tokenizer</span><span class="o">.</span><span class="n">pad_token</span> <span class="o">=</span> <span class="n">my_tokenizer</span><span class="o">.</span><span class="n">eos_token</span>
+<span class="n">my_tokenizer</span><span class="o">.</span><span class="n">padding_side</span> <span class="o">=</span> <span class="s1">&#39;right&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "71d77c2d30224b718fff8a4a21a8b4c2", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "4581130029c548b09a897bc54b163e0e", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "ad1f31277a5549e4981c3ed22f47bb26", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>We will use <a class="reference external" href="https://github.com/bitsandbytes-foundation/bitsandbytes">BitsandBytes</a> to quantize the model. First, we define the <code class="docutils literal notranslate"><span class="pre">BitsAndBytesConfig</span></code>, we will use 4-bit quantization with the <code class="docutils literal notranslate"><span class="pre">fp4</span></code> datatype with nested quantization, finally the computation type is <code class="docutils literal notranslate"><span class="pre">float16</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fp4_config</span> <span class="o">=</span> <span class="n">BitsAndBytesConfig</span><span class="p">(</span>
+    <span class="n">load_in_4bit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">bnb_4bit_quant_type</span><span class="o">=</span><span class="s2">&quot;fp4&quot;</span><span class="p">,</span>
+    <span class="n">bnb_4bit_use_double_quant</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">bnb_4bit_compute_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "dad8cc77bdab4ac8ae24cd96cd584a55", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f7920b6d6ce8428dbc99814479174468", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "688193f6af844327b56e46e7ff69f2fe", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>Then we use <code class="docutils literal notranslate"><span class="pre">transformers.LlamaForCausalLM.from_pretrained</span></code> to load the model from Hugging Face and apply the <code class="docutils literal notranslate"><span class="pre">fp4_config</span></code> configuration. We will also set the device that we got before.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">quantized_model</span> <span class="o">=</span> <span class="n">LlamaForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+    <span class="n">model_id</span><span class="p">,</span>
+    <span class="n">quantization_config</span><span class="o">=</span><span class="n">fp4_config</span><span class="p">,</span>
+    <span class="n">device_map</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sample-prompt">
+<h2>Sample Prompt<a class="headerlink" href="#sample-prompt" title="Link to this heading">#</a></h2>
+<p>Now, we will evaluate the model with a sample prompt. We define <code class="docutils literal notranslate"><span class="pre">transformers.pipeline</span></code> for <code class="docutils literal notranslate"><span class="pre">text-generation</span></code> using the quantized model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sample_prompt</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="sa">r</span><span class="s2">&quot;write a python function to find duplicate numbers in a list&quot;</span>
+<span class="p">)</span>
+
+<span class="n">quantized_pipeline</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span>
+    <span class="s2">&quot;text-generation&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">quantized_model</span><span class="p">,</span>
+    <span class="n">tokenizer</span><span class="o">=</span><span class="n">my_tokenizer</span><span class="p">,</span>
+    <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">,</span>
+    <span class="n">device_map</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Device set to use cuda:0
+/opt/conda/envs/py_3.12/lib/python3.12/site-packages/transformers/integrations/sdpa_attention.py:54: UserWarning: Using AOTriton backend for Flash Attention forward... (Triggered internally at /var/lib/jenkins/pytorch/aten/src/ATen/native/transformers/hip/flash_attn/flash_api.h:267.)
+  attn_output = torch.nn.functional.scaled_dot_product_attention(
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Result:
+write a python function to find duplicate numbers in a list of integer values
+import  from  collections
+
+duplicate_numbers_list = [1,0,3,0,2,3,6]
+
+print(dup_number = [i for a if i!= a[i]] for i in enumerate(a.values()) if  i == 1)
+
+duplicate_numbers_list = [i  for  i in a.values()
+                              for  i in enumerate(a)]
+print(dup number  of numbers = duplicate_numbers)
+
+print([i for a if i  for  i in enumerate(a)])
+```
+```
+[1,0,3,0,2,3,0]
+
+[0]
+
+duplicate_number  of  number s = [i for  i in enumerate(a)]
+```
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we can invoke the model to generate an answer to our prompt. We will also print the generated <code class="docutils literal notranslate"><span class="pre">sequences</span></code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Explore different values of <code class="docutils literal notranslate"><span class="pre">top_k</span></code> and <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and run the prompt twice. What happens if you increase the <code class="docutils literal notranslate"><span class="pre">temperature</span></code>?</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sequences</span> <span class="o">=</span> <span class="n">quantized_pipeline</span><span class="p">(</span>
+    <span class="n">text_inputs</span><span class="o">=</span><span class="n">sample_prompt</span><span class="p">,</span>
+    <span class="n">do_sample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">top_k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">num_return_sequences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">eos_token_id</span><span class="o">=</span><span class="n">my_tokenizer</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">,</span>
+    <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Result:</span><span class="se">\n</span><span class="si">{</span><span class="n">seq</span><span class="p">[</span><span class="s1">&#39;generated_text&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="define-fine-tune-parameters">
+<h2>Define fine-tune parameters<a class="headerlink" href="#define-fine-tune-parameters" title="Link to this heading">#</a></h2>
+<p>Now, to fine tune the model we will use the Low-Rank Adaption technique. In this technique, instead of modifying the model itself a few extra parameters (rank) are added and then updated during the fine tuning process. For more information, check <a class="reference external" href="https://huggingface.co/docs/peft/main/en/developer_guides/lora">here</a>.</p>
+<p>We can define the LoRA configuration with <code class="docutils literal notranslate"><span class="pre">peft.LoraConfig</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">r</span></code>: size of adaptation layer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lora_alpha</span></code>: indicates how strongly does the adaptation layer affect the base model <a class="reference external" href="https://arxiv.org/abs/2106.09685">see 4.1</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lora_dropout</span></code>: optional dropout layer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bias</span></code>: whether or not to set bias</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">task_type</span></code>: task type see <a class="reference external" href="https://huggingface.co/docs/peft/en/package_reference/peft_types#peft.TaskType">TaskType</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_modules</span></code>: which modules to apply adapter layers</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lora_config</span> <span class="o">=</span> <span class="n">LoraConfig</span><span class="p">(</span>
+    <span class="n">r</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+    <span class="n">lora_alpha</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+    <span class="n">lora_dropout</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">bias</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+    <span class="n">task_type</span><span class="o">=</span><span class="s2">&quot;CAUSAL_LM&quot;</span><span class="p">,</span>
+    <span class="n">target_modules</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;up_proj&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;down_proj&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gate_proj&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;k_proj&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;q_proj&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;v_proj&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o_proj&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We this configuration, we can define our <code class="docutils literal notranslate"><span class="pre">adapted_model</span></code>, the model we will use the fine tune. And our <code class="docutils literal notranslate"><span class="pre">adapted_pipeline</span></code></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adapted_model</span> <span class="o">=</span> <span class="n">get_peft_model</span><span class="p">(</span><span class="n">quantized_model</span><span class="p">,</span> <span class="n">lora_config</span><span class="p">)</span>
+
+<span class="n">adapted_pipeline</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span>
+    <span class="s2">&quot;text-generation&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">adapted_model</span><span class="p">,</span>
+    <span class="n">tokenizer</span><span class="o">=</span><span class="n">my_tokenizer</span><span class="p">,</span>
+    <span class="n">device_map</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Device set to use cuda:0
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s run the <code class="docutils literal notranslate"><span class="pre">sample_prompt</span></code> on the adapted model.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Do you note anything different from the original model?</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sequences</span> <span class="o">=</span> <span class="n">adapted_pipeline</span><span class="p">(</span>
+    <span class="n">text_inputs</span><span class="o">=</span><span class="n">sample_prompt</span><span class="p">,</span>
+    <span class="n">do_sample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">top_k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">num_return_sequences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">eos_token_id</span><span class="o">=</span><span class="n">my_tokenizer</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">,</span>
+    <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.2</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Result:</span><span class="se">\n</span><span class="si">{</span><span class="n">seq</span><span class="p">[</span><span class="s1">&#39;generated_text&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Result:
+write a python function to find duplicate numbers in a list
+
+def find_duplicate_numbers(numbers):
+  &quot;&quot;&quot;Find duplicate numbers in a list.
+  :param numbers: a list of numbers to search for duplicates.
+  :returns: a list of numbers that are duplicates.
+  &quot;&quot;&quot;
+  duplicates = []
+  for i in range(len(numbers)):
+    if numbers[i] == numbers[i+1]:
+      duplicates.append(numbers[i])
+  return duplicates
+
+
+Result:
+write a python function to find duplicate numbers in a list of integers
+You can use the built-in function to find duplicates in Python. The function is named find_dublicates and it is declared inside the Python standard library.
+The find_dublicates function takes a list of integers as its argument. It then uses a for loop to iterate over the list and checks if each integer is equal to any of the other integers in the list. If it is, then the function returns a boolean True, which means that there are duplicate numbers in the list. Otherwise, the function returns a boolean False, which means that there are no duplicate numbers in the list.
+The following code shows how to use the find_dublicates function to find duplicate numbers in a list of integers:
+list_of_ints = [2, 4, 5, 6, 8, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
+print(&quot;The list of integers is: &quot; + str(list_of_ints))
+print(&quot;There are no duplicate numbers in the list.&quot;)
+print(&quot;The list of integers is: &quot; + str(list_of_ints))
+The output of the code is as follows:
+The list of integers
+
+Result:
+write a python function to find duplicate numbers in a list of integers
+1. Write a Python function to find duplicate numbers in a list of integers. The function should return a list of tuples. The first element of each tuple should be the number of times the number occurs in the list, and the second element should be the number of times the number occurs in the list. The function should also print a message indicating whether the number occurs more than once in the list. For example, if the input list is [1, 2, 2, 3, 3, 4, 4, 4, 5, 5, 5, 5], the function should return the list [[2, 2, 2], [4, 4, 4], [5, 5, 5]].
+2. Write a Python function to find duplicate numbers in a list of integers. The function should return a list of tuples. The first element of each tuple should be the number of times the number occurs in the list, and the second element should be the number of times the number occurs in the list. The function should also print a message indicating whether the number occurs more than once in the list. For example, if the input list is [1, 2, 
+
+Result:
+write a python function to find duplicate numbers in a list
+The function returns True if the given list has at least one duplicate, and False otherwise. It returns False if the given list is empty.
+A function that returns true if the given list has at least one duplicate, and false if the given list is empty.
+A function that returns true if the given list has at least one duplicate, and false if the given list is empty. It returns false if the given list is empty.
+A function that returns true if the given list has at least one duplicate, and false if the given list is empty. It returns False if the given list is empty.
+A function that returns true if the given list has at least one duplicate, and false if the given list is empty. It returns False if the given list is empty.
+A function that returns true if the given list has at least one duplicate, and false if the given list is empty. It returns False if the given list is empty.
+A function that returns true if the given list has at least one duplicate, and false if the given list is empty. It returns False if the given list is empty.
+A function that returns true if the given list has at least one duplicate, and false if the given list is empty. It returns False if the given list is empty
+
+Result:
+write a python function to find duplicate numbers in a list
+I have a list of numbers that are duplicates, how can I find the duplicate numbers in the list?
+The problem is that I need to find the duplicates numbers in the list. I have tried the code below but it is not working.
+list = [1,2,3,4,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="get-dataset-to-fine-tune-model">
+<h2>Get Dataset to fine-tune model<a class="headerlink" href="#get-dataset-to-fine-tune-model" title="Link to this heading">#</a></h2>
+<p>We are going to use the <a class="reference external" href="https://huggingface.co/datasets/google-research-datasets/mbpp">Google Mostly Basic Python Problems</a> dataset. Although, large language models are very good at Python, the idea of this example is to fine-tune the model into providing the output in a particular style. It may be possible to get similar results with prompt-engineering techniques, however the idea of the notebook is to show you an example of fine-tuning.</p>
+<p>Load dataset and print it.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By executing the next cell, you will download the dataset <code class="docutils literal notranslate"><span class="pre">google-research-datasets/mbpp</span></code> and you agree to its license and obtaining permission to use it from dataset owner if needed.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
+
+<span class="n">google_python</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;google-research-datasets/mbpp&quot;</span><span class="p">,</span> <span class="s2">&quot;sanitized&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">google_python</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DatasetDict({
+    train: Dataset({
+        features: [&#39;source_file&#39;, &#39;task_id&#39;, &#39;prompt&#39;, &#39;code&#39;, &#39;test_imports&#39;, &#39;test_list&#39;],
+        num_rows: 120
+    })
+    test: Dataset({
+        features: [&#39;source_file&#39;, &#39;task_id&#39;, &#39;prompt&#39;, &#39;code&#39;, &#39;test_imports&#39;, &#39;test_list&#39;],
+        num_rows: 257
+    })
+    validation: Dataset({
+        features: [&#39;source_file&#39;, &#39;task_id&#39;, &#39;prompt&#39;, &#39;code&#39;, &#39;test_imports&#39;, &#39;test_list&#39;],
+        num_rows: 43
+    })
+    prompt: Dataset({
+        features: [&#39;source_file&#39;, &#39;task_id&#39;, &#39;prompt&#39;, &#39;code&#39;, &#39;test_imports&#39;, &#39;test_list&#39;],
+        num_rows: 7
+    })
+})
+</pre></div>
+</div>
+</div>
+</div>
+<p>We are now going to define the output format that we want the model to be fine tuning on using <a class="reference external" href="https://huggingface.co/blog/chat-templates">chat templates</a>. The task is to fine-tune the model so the output Python is Markdown friendly, i.e., being able to print code snippets.</p>
+<p>The function <code class="docutils literal notranslate"><span class="pre">instructify</span></code> receives the <code class="docutils literal notranslate"><span class="pre">qr_row</span></code> dictionary that contains the <code class="docutils literal notranslate"><span class="pre">prompt</span></code>, <code class="docutils literal notranslate"><span class="pre">code</span></code> and <code class="docutils literal notranslate"><span class="pre">test_list</span></code>. We define the <code class="docutils literal notranslate"><span class="pre">qr_json</span></code> template with the <code class="docutils literal notranslate"><span class="pre">user</span></code> and <code class="docutils literal notranslate"><span class="pre">assistant</span></code> role. The user role contains the <code class="docutils literal notranslate"><span class="pre">prompt</span></code> and the <code class="docutils literal notranslate"><span class="pre">assistant</span></code> role contains the Python <code class="docutils literal notranslate"><span class="pre">code</span></code> as snippet and the test list. Finally, we apply the <code class="docutils literal notranslate"><span class="pre">apply_chat_template</span></code> to the roles dict and add it to the <code class="docutils literal notranslate"><span class="pre">text</span></code> key and return <code class="docutils literal notranslate"><span class="pre">qr_row</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">instructify</span><span class="p">(</span><span class="n">qr_row</span><span class="p">):</span>
+    <span class="n">qr_json</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">qr_row</span><span class="p">[</span><span class="s2">&quot;prompt&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">```python</span>
+<span class="si">{</span><span class="n">qr_row</span><span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">]</span><span class="si">}</span>
+<span class="s1">```</span>
+
+<span class="s1">Test List:</span>
+
+<span class="s1">```python</span>
+<span class="s1">test_list=</span><span class="si">{</span><span class="n">qr_row</span><span class="p">[</span><span class="s2">&quot;test_list&quot;</span><span class="p">]</span><span class="si">}</span>
+<span class="s1">```</span>
+<span class="s1">&#39;&#39;&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+
+    <span class="n">qr_row</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">my_tokenizer</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span><span class="n">qr_json</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">qr_row</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will define the chat template. Check Llama-3 prompt formats <a class="reference external" href="https://www.llama.com/docs/model-cards-and-prompt-formats/meta-llama-3/">here</a>. Concatenating query/response is sufficient for our use case.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_tokenizer</span><span class="o">.</span><span class="n">chat_template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;{</span><span class="si">% s</span><span class="s2">et loop_messages = messages %}{</span><span class="si">% f</span><span class="s2">or message in loop_messages %}{</span><span class="si">% s</span><span class="s2">et content = message[&#39;content&#39;] | trim + &#39;</span><span class="se">\n</span><span class="s2">&#39; %}{{ content }}{</span><span class="si">% e</span><span class="s2">ndfor %}&quot;&quot;&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">my_tokenizer</span><span class="o">.</span><span class="n">chat_template</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{% set loop_messages = messages %}{% for message in loop_messages %}{% set content = message[&#39;content&#39;] | trim + &#39;
+&#39; %}{{ content }}{% endfor %}
+</pre></div>
+</div>
+</div>
+</div>
+<p>We now can apply the chat template to our dataset</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formatted_dataset</span> <span class="o">=</span> <span class="n">google_python</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">instructify</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d5f2d45bce174e24bb75f09ee7f20e1f", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "56c64953e334420c8203e97fadb0cd9e", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "b76e3a80589b4e0682e9b32edad918c5", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "9e3bb906841a44fd851da1c42cdef0c5", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>Display one example, you can see how the dataset now is formatted to show code snippets (```).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">formatted_dataset</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Write a python function to find the first repeated character in a given string.
+```python
+def first_repeated_char(str1):
+  for index,c in enumerate(str1):
+    if str1[:index+1].count(c) &gt; 1:
+      return c
+```
+
+Test List:
+
+```python
+test_list=[&#39;assert first_repeated_char(&quot;abcabc&quot;) == &quot;a&quot;&#39;, &#39;assert first_repeated_char(&quot;abc&quot;) == None&#39;, &#39;assert first_repeated_char(&quot;123123&quot;) == &quot;1&quot;&#39;]
+```
+</pre></div>
+</div>
+</div>
+</div>
+<p>Display the same content using the <code class="docutils literal notranslate"><span class="pre">IPython.display.Markdown</span></code> visualization</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Markdown</span>
+<span class="n">Markdown</span><span class="p">(</span><span class="n">formatted_dataset</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<p>Write a python function to find the first repeated character in a given string.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">first_repeated_char</span><span class="p">(</span><span class="n">str1</span><span class="p">):</span>
+  <span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">str1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">str1</span><span class="p">[:</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">c</span>
+</pre></div>
+</div>
+<p>Test List:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">test_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;assert first_repeated_char(&quot;abcabc&quot;) == &quot;a&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;assert first_repeated_char(&quot;abc&quot;) == None&#39;</span><span class="p">,</span> <span class="s1">&#39;assert first_repeated_char(&quot;123123&quot;) == &quot;1&quot;&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s run this example prompt on the adapted model and observe the output. Although, we see some code snippet, the test list is not there.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">example_prompt</span> <span class="o">=</span> <span class="n">formatted_dataset</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;prompt&quot;</span><span class="p">]</span>
+
+<span class="n">sequences</span> <span class="o">=</span> <span class="n">adapted_pipeline</span><span class="p">(</span>
+    <span class="n">text_inputs</span><span class="o">=</span><span class="n">example_prompt</span><span class="p">,</span>
+    <span class="n">do_sample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">top_k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">num_return_sequences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">eos_token_id</span><span class="o">=</span><span class="n">my_tokenizer</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">,</span>
+    <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Result:</span><span class="se">\n</span><span class="si">{</span><span class="n">seq</span><span class="p">[</span><span class="s1">&#39;generated_text&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Result:
+Write a python function to remove first and last occurrence of a given character from the string. 
+The function should return a new string with the given character removed from the string.
+
+For example, if the string is &#39;hello&#39;, the function should return &#39;hello&#39; and if the string is &#39;world&#39;, the function should return &#39;w&#39;.
+
+Hint: use the `count` method to count the number of occurrences of a character in the string and then remove the first and last occurrences of the character.
+```python
+string = &#39;hello&#39;
+char = &#39;o&#39;
+result = string.count(char)
+print(f&quot;String &#39;{string}&#39; has character &#39;{char}&#39; {result} times&quot;)
+```
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="fine-tune-the-adapted-model">
+<h2>🚀 Fine-tune the Adapted Model<a class="headerlink" href="#fine-tune-the-adapted-model" title="Link to this heading">#</a></h2>
+<p>We now define the metric that will be used to <a class="reference external" href="https://huggingface.co/docs/evaluate/package_reference/loading_methods#evaluate.load">evaluate</a> the fine-tuned model, we will use <a class="reference external" href="https://huggingface.co/docs/evaluate/v0.4.0/en/types_of_evaluations#metrics">accuracy</a>. We will also define the loss function with the <code class="docutils literal notranslate"><span class="pre">compute_metric</span></code> function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metric</span> <span class="o">=</span> <span class="n">evaluate</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_metrics</span><span class="p">(</span><span class="n">eval_pred</span><span class="p">):</span>
+    <span class="n">logits</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">eval_pred</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">evaluate</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">,</span> <span class="n">references</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We also need to tokenize the dataset before it can be consumed in the training.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">tokenize_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">text_field</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tokenize_function</span><span class="p">(</span><span class="n">examples</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">examples</span><span class="p">[</span><span class="n">text_field</span><span class="p">],</span> <span class="n">truncation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">tokenize_function</span><span class="p">,</span> <span class="n">batched</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">tokenized_train_dataset</span> <span class="o">=</span> <span class="n">tokenize_dataset</span><span class="p">(</span><span class="n">formatted_dataset</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span> <span class="n">my_tokenizer</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">)</span>
+<span class="n">tokenized_eval_dataset</span> <span class="o">=</span> <span class="n">tokenize_dataset</span><span class="p">(</span><span class="n">formatted_dataset</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">],</span> <span class="n">my_tokenizer</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s define our training configuration, we do this with <code class="docutils literal notranslate"><span class="pre">trl.SFTConfig</span></code>, some of the most relevant arguments are listed below:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">per_device_train_batch_size</span></code>: size of the training batch</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">per_device_eval_batch_size</span></code>: size of the evaluation batch</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gradient_accumulation_steps</span></code>: Gradient accumulation steps</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optim</span></code>: optimizer type</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_train_epochs</span></code>: number of training epochs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eval_steps</span></code>: evaluation steps</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">logging_steps</span></code>: how often the model logs progress</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">warmup_steps</span></code>: warmup steps</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">learning_rate</span></code>: rate of learning</p></li>
+<li><p>We use <code class="docutils literal notranslate"><span class="pre">fp16</span></code> precision</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">group_by_length</span></code>: Group samples by length</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sft_config</span> <span class="o">=</span> <span class="n">SFTConfig</span><span class="p">(</span>
+    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;Llama-Python-Single-GPU&quot;</span><span class="p">,</span>
+    <span class="n">per_device_train_batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">per_device_eval_batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">gradient_accumulation_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">optim</span><span class="o">=</span><span class="s2">&quot;paged_adamw_8bit&quot;</span><span class="p">,</span>
+    <span class="n">num_train_epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">eval_steps</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">logging_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">warmup_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">logging_strategy</span><span class="o">=</span><span class="s2">&quot;steps&quot;</span><span class="p">,</span>
+    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+    <span class="n">fp16</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">bf16</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">group_by_length</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_seq_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "62db1140fd4840ecac6e25dee31ffd3a", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "15a13f761e304ba087c9b23a9f0981d5", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "c820b6ea18e84552ad7af7a6f485a38d", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "f88f8fc364be409e95e60db4efb3c60d", "version_major": 2, "version_minor": 0}</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No label_names provided for model class `PeftModelForCausalLM`. Since `PeftModel` hides base models input arguments, if label_names is not given, label_names can&#39;t be set automatically within `Trainer`. Note that empty label_names list will be used instead.
+</pre></div>
+</div>
+</div>
+</div>
+<p>With the configuration defined, we can finally create the <code class="docutils literal notranslate"><span class="pre">trl.SFTTrainer</span></code> that will help us with the fine tuning.
+We initialize it with the <code class="docutils literal notranslate"><span class="pre">adapted_model</span></code>, the tokenized tran and eval datasets, the <code class="docutils literal notranslate"><span class="pre">SFTConfig</span></code> and the <code class="docutils literal notranslate"><span class="pre">lora_config</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">trainer</span> <span class="o">=</span> <span class="n">SFTTrainer</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">adapted_model</span><span class="p">,</span>
+    <span class="n">train_dataset</span><span class="o">=</span><span class="n">tokenized_train_dataset</span><span class="p">,</span>
+    <span class="n">eval_dataset</span><span class="o">=</span><span class="n">tokenized_eval_dataset</span><span class="p">,</span>
+    <span class="n">args</span><span class="o">=</span><span class="n">sft_config</span><span class="p">,</span>
+    <span class="n">peft_config</span><span class="o">=</span><span class="n">lora_config</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we can call the <code class="docutils literal notranslate"><span class="pre">.train()</span></code> method to start fine tuning the model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/envs/py_3.12/lib/python3.12/site-packages/torch/autograd/graph.py:823: UserWarning: Using AOTriton backend for Flash Attention backward... (Triggered internally at /var/lib/jenkins/pytorch/aten/src/ATen/native/transformers/hip/flash_attn/flash_api.h:452.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+</pre></div>
+</div>
+<div class="output text_html">
+    <div>
+      
+      <progress value='300' max='300' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      [300/300 03:10, Epoch 20/20]
+    </div>
+    <table border="1" class="dataframe">
+  <thead>
+ <tr style="text-align: left;">
+      <th>Step</th>
+      <th>Training Loss</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>3.569500</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>2.826900</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>3.377800</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>3.833900</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>3.580000</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>3.138300</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>1.186300</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>0.832100</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>0.877700</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>0.707000</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>0.662100</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>0.608500</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>0.583300</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>0.515600</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>0.615300</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>0.524200</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>0.563000</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>0.554100</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>0.597600</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>0.570800</td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>0.520200</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>0.508100</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>0.622500</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>0.571600</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>0.454400</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>0.446500</td>
+    </tr>
+    <tr>
+      <td>27</td>
+      <td>0.461600</td>
+    </tr>
+    <tr>
+      <td>28</td>
+      <td>0.452200</td>
+    </tr>
+    <tr>
+      <td>29</td>
+      <td>0.439300</td>
+    </tr>
+    <tr>
+      <td>30</td>
+      <td>0.437300</td>
+    </tr>
+    <tr>
+      <td>31</td>
+      <td>0.387000</td>
+    </tr>
+    <tr>
+      <td>32</td>
+      <td>0.400400</td>
+    </tr>
+    <tr>
+      <td>33</td>
+      <td>0.391100</td>
+    </tr>
+    <tr>
+      <td>34</td>
+      <td>0.505800</td>
+    </tr>
+    <tr>
+      <td>35</td>
+      <td>0.451600</td>
+    </tr>
+    <tr>
+      <td>36</td>
+      <td>0.493600</td>
+    </tr>
+    <tr>
+      <td>37</td>
+      <td>0.464200</td>
+    </tr>
+    <tr>
+      <td>38</td>
+      <td>0.338600</td>
+    </tr>
+    <tr>
+      <td>39</td>
+      <td>0.363300</td>
+    </tr>
+    <tr>
+      <td>40</td>
+      <td>0.393800</td>
+    </tr>
+    <tr>
+      <td>41</td>
+      <td>0.409900</td>
+    </tr>
+    <tr>
+      <td>42</td>
+      <td>0.428500</td>
+    </tr>
+    <tr>
+      <td>43</td>
+      <td>0.409100</td>
+    </tr>
+    <tr>
+      <td>44</td>
+      <td>0.361000</td>
+    </tr>
+    <tr>
+      <td>45</td>
+      <td>0.439500</td>
+    </tr>
+    <tr>
+      <td>46</td>
+      <td>0.393300</td>
+    </tr>
+    <tr>
+      <td>47</td>
+      <td>0.455900</td>
+    </tr>
+    <tr>
+      <td>48</td>
+      <td>0.430300</td>
+    </tr>
+    <tr>
+      <td>49</td>
+      <td>0.385500</td>
+    </tr>
+    <tr>
+      <td>50</td>
+      <td>0.349300</td>
+    </tr>
+    <tr>
+      <td>51</td>
+      <td>0.372000</td>
+    </tr>
+    <tr>
+      <td>52</td>
+      <td>0.376100</td>
+    </tr>
+    <tr>
+      <td>53</td>
+      <td>0.402300</td>
+    </tr>
+    <tr>
+      <td>54</td>
+      <td>0.296200</td>
+    </tr>
+    <tr>
+      <td>55</td>
+      <td>0.478900</td>
+    </tr>
+    <tr>
+      <td>56</td>
+      <td>0.296300</td>
+    </tr>
+    <tr>
+      <td>57</td>
+      <td>0.352800</td>
+    </tr>
+    <tr>
+      <td>58</td>
+      <td>0.437200</td>
+    </tr>
+    <tr>
+      <td>59</td>
+      <td>0.365000</td>
+    </tr>
+    <tr>
+      <td>60</td>
+      <td>0.266100</td>
+    </tr>
+    <tr>
+      <td>61</td>
+      <td>0.316700</td>
+    </tr>
+    <tr>
+      <td>62</td>
+      <td>0.371000</td>
+    </tr>
+    <tr>
+      <td>63</td>
+      <td>0.331200</td>
+    </tr>
+    <tr>
+      <td>64</td>
+      <td>0.280900</td>
+    </tr>
+    <tr>
+      <td>65</td>
+      <td>0.326300</td>
+    </tr>
+    <tr>
+      <td>66</td>
+      <td>0.357000</td>
+    </tr>
+    <tr>
+      <td>67</td>
+      <td>0.444300</td>
+    </tr>
+    <tr>
+      <td>68</td>
+      <td>0.347000</td>
+    </tr>
+    <tr>
+      <td>69</td>
+      <td>0.349800</td>
+    </tr>
+    <tr>
+      <td>70</td>
+      <td>0.369600</td>
+    </tr>
+    <tr>
+      <td>71</td>
+      <td>0.403700</td>
+    </tr>
+    <tr>
+      <td>72</td>
+      <td>0.334000</td>
+    </tr>
+    <tr>
+      <td>73</td>
+      <td>0.330900</td>
+    </tr>
+    <tr>
+      <td>74</td>
+      <td>0.334200</td>
+    </tr>
+    <tr>
+      <td>75</td>
+      <td>0.306300</td>
+    </tr>
+    <tr>
+      <td>76</td>
+      <td>0.231900</td>
+    </tr>
+    <tr>
+      <td>77</td>
+      <td>0.433400</td>
+    </tr>
+    <tr>
+      <td>78</td>
+      <td>0.337900</td>
+    </tr>
+    <tr>
+      <td>79</td>
+      <td>0.298800</td>
+    </tr>
+    <tr>
+      <td>80</td>
+      <td>0.318100</td>
+    </tr>
+    <tr>
+      <td>81</td>
+      <td>0.397400</td>
+    </tr>
+    <tr>
+      <td>82</td>
+      <td>0.266800</td>
+    </tr>
+    <tr>
+      <td>83</td>
+      <td>0.384300</td>
+    </tr>
+    <tr>
+      <td>84</td>
+      <td>0.292300</td>
+    </tr>
+    <tr>
+      <td>85</td>
+      <td>0.311600</td>
+    </tr>
+    <tr>
+      <td>86</td>
+      <td>0.360800</td>
+    </tr>
+    <tr>
+      <td>87</td>
+      <td>0.278800</td>
+    </tr>
+    <tr>
+      <td>88</td>
+      <td>0.288300</td>
+    </tr>
+    <tr>
+      <td>89</td>
+      <td>0.276300</td>
+    </tr>
+    <tr>
+      <td>90</td>
+      <td>0.293100</td>
+    </tr>
+    <tr>
+      <td>91</td>
+      <td>0.254400</td>
+    </tr>
+    <tr>
+      <td>92</td>
+      <td>0.315400</td>
+    </tr>
+    <tr>
+      <td>93</td>
+      <td>0.283700</td>
+    </tr>
+    <tr>
+      <td>94</td>
+      <td>0.349500</td>
+    </tr>
+    <tr>
+      <td>95</td>
+      <td>0.294100</td>
+    </tr>
+    <tr>
+      <td>96</td>
+      <td>0.362800</td>
+    </tr>
+    <tr>
+      <td>97</td>
+      <td>0.232200</td>
+    </tr>
+    <tr>
+      <td>98</td>
+      <td>0.255300</td>
+    </tr>
+    <tr>
+      <td>99</td>
+      <td>0.265800</td>
+    </tr>
+    <tr>
+      <td>100</td>
+      <td>0.220800</td>
+    </tr>
+    <tr>
+      <td>101</td>
+      <td>0.320300</td>
+    </tr>
+    <tr>
+      <td>102</td>
+      <td>0.263700</td>
+    </tr>
+    <tr>
+      <td>103</td>
+      <td>0.269200</td>
+    </tr>
+    <tr>
+      <td>104</td>
+      <td>0.325000</td>
+    </tr>
+    <tr>
+      <td>105</td>
+      <td>0.263800</td>
+    </tr>
+    <tr>
+      <td>106</td>
+      <td>0.248200</td>
+    </tr>
+    <tr>
+      <td>107</td>
+      <td>0.240100</td>
+    </tr>
+    <tr>
+      <td>108</td>
+      <td>0.271100</td>
+    </tr>
+    <tr>
+      <td>109</td>
+      <td>0.268400</td>
+    </tr>
+    <tr>
+      <td>110</td>
+      <td>0.248100</td>
+    </tr>
+    <tr>
+      <td>111</td>
+      <td>0.236700</td>
+    </tr>
+    <tr>
+      <td>112</td>
+      <td>0.228900</td>
+    </tr>
+    <tr>
+      <td>113</td>
+      <td>0.277300</td>
+    </tr>
+    <tr>
+      <td>114</td>
+      <td>0.251400</td>
+    </tr>
+    <tr>
+      <td>115</td>
+      <td>0.209000</td>
+    </tr>
+    <tr>
+      <td>116</td>
+      <td>0.243500</td>
+    </tr>
+    <tr>
+      <td>117</td>
+      <td>0.314900</td>
+    </tr>
+    <tr>
+      <td>118</td>
+      <td>0.222000</td>
+    </tr>
+    <tr>
+      <td>119</td>
+      <td>0.254200</td>
+    </tr>
+    <tr>
+      <td>120</td>
+      <td>0.247900</td>
+    </tr>
+    <tr>
+      <td>121</td>
+      <td>0.183900</td>
+    </tr>
+    <tr>
+      <td>122</td>
+      <td>0.260100</td>
+    </tr>
+    <tr>
+      <td>123</td>
+      <td>0.199800</td>
+    </tr>
+    <tr>
+      <td>124</td>
+      <td>0.209500</td>
+    </tr>
+    <tr>
+      <td>125</td>
+      <td>0.231200</td>
+    </tr>
+    <tr>
+      <td>126</td>
+      <td>0.199900</td>
+    </tr>
+    <tr>
+      <td>127</td>
+      <td>0.264000</td>
+    </tr>
+    <tr>
+      <td>128</td>
+      <td>0.194800</td>
+    </tr>
+    <tr>
+      <td>129</td>
+      <td>0.235700</td>
+    </tr>
+    <tr>
+      <td>130</td>
+      <td>0.272500</td>
+    </tr>
+    <tr>
+      <td>131</td>
+      <td>0.153900</td>
+    </tr>
+    <tr>
+      <td>132</td>
+      <td>0.166400</td>
+    </tr>
+    <tr>
+      <td>133</td>
+      <td>0.210300</td>
+    </tr>
+    <tr>
+      <td>134</td>
+      <td>0.226100</td>
+    </tr>
+    <tr>
+      <td>135</td>
+      <td>0.203000</td>
+    </tr>
+    <tr>
+      <td>136</td>
+      <td>0.209000</td>
+    </tr>
+    <tr>
+      <td>137</td>
+      <td>0.202800</td>
+    </tr>
+    <tr>
+      <td>138</td>
+      <td>0.140800</td>
+    </tr>
+    <tr>
+      <td>139</td>
+      <td>0.239200</td>
+    </tr>
+    <tr>
+      <td>140</td>
+      <td>0.159800</td>
+    </tr>
+    <tr>
+      <td>141</td>
+      <td>0.153900</td>
+    </tr>
+    <tr>
+      <td>142</td>
+      <td>0.143900</td>
+    </tr>
+    <tr>
+      <td>143</td>
+      <td>0.194200</td>
+    </tr>
+    <tr>
+      <td>144</td>
+      <td>0.151900</td>
+    </tr>
+    <tr>
+      <td>145</td>
+      <td>0.128100</td>
+    </tr>
+    <tr>
+      <td>146</td>
+      <td>0.144700</td>
+    </tr>
+    <tr>
+      <td>147</td>
+      <td>0.160100</td>
+    </tr>
+    <tr>
+      <td>148</td>
+      <td>0.204300</td>
+    </tr>
+    <tr>
+      <td>149</td>
+      <td>0.250600</td>
+    </tr>
+    <tr>
+      <td>150</td>
+      <td>0.199300</td>
+    </tr>
+    <tr>
+      <td>151</td>
+      <td>0.151200</td>
+    </tr>
+    <tr>
+      <td>152</td>
+      <td>0.139200</td>
+    </tr>
+    <tr>
+      <td>153</td>
+      <td>0.115300</td>
+    </tr>
+    <tr>
+      <td>154</td>
+      <td>0.127300</td>
+    </tr>
+    <tr>
+      <td>155</td>
+      <td>0.178400</td>
+    </tr>
+    <tr>
+      <td>156</td>
+      <td>0.136900</td>
+    </tr>
+    <tr>
+      <td>157</td>
+      <td>0.161900</td>
+    </tr>
+    <tr>
+      <td>158</td>
+      <td>0.141400</td>
+    </tr>
+    <tr>
+      <td>159</td>
+      <td>0.179700</td>
+    </tr>
+    <tr>
+      <td>160</td>
+      <td>0.141700</td>
+    </tr>
+    <tr>
+      <td>161</td>
+      <td>0.126400</td>
+    </tr>
+    <tr>
+      <td>162</td>
+      <td>0.154400</td>
+    </tr>
+    <tr>
+      <td>163</td>
+      <td>0.123900</td>
+    </tr>
+    <tr>
+      <td>164</td>
+      <td>0.137000</td>
+    </tr>
+    <tr>
+      <td>165</td>
+      <td>0.179800</td>
+    </tr>
+    <tr>
+      <td>166</td>
+      <td>0.134100</td>
+    </tr>
+    <tr>
+      <td>167</td>
+      <td>0.108700</td>
+    </tr>
+    <tr>
+      <td>168</td>
+      <td>0.115800</td>
+    </tr>
+    <tr>
+      <td>169</td>
+      <td>0.121900</td>
+    </tr>
+    <tr>
+      <td>170</td>
+      <td>0.147200</td>
+    </tr>
+    <tr>
+      <td>171</td>
+      <td>0.139700</td>
+    </tr>
+    <tr>
+      <td>172</td>
+      <td>0.092700</td>
+    </tr>
+    <tr>
+      <td>173</td>
+      <td>0.117300</td>
+    </tr>
+    <tr>
+      <td>174</td>
+      <td>0.089800</td>
+    </tr>
+    <tr>
+      <td>175</td>
+      <td>0.134700</td>
+    </tr>
+    <tr>
+      <td>176</td>
+      <td>0.098500</td>
+    </tr>
+    <tr>
+      <td>177</td>
+      <td>0.124000</td>
+    </tr>
+    <tr>
+      <td>178</td>
+      <td>0.090500</td>
+    </tr>
+    <tr>
+      <td>179</td>
+      <td>0.121300</td>
+    </tr>
+    <tr>
+      <td>180</td>
+      <td>0.105100</td>
+    </tr>
+    <tr>
+      <td>181</td>
+      <td>0.077800</td>
+    </tr>
+    <tr>
+      <td>182</td>
+      <td>0.064200</td>
+    </tr>
+    <tr>
+      <td>183</td>
+      <td>0.129400</td>
+    </tr>
+    <tr>
+      <td>184</td>
+      <td>0.080300</td>
+    </tr>
+    <tr>
+      <td>185</td>
+      <td>0.078100</td>
+    </tr>
+    <tr>
+      <td>186</td>
+      <td>0.068900</td>
+    </tr>
+    <tr>
+      <td>187</td>
+      <td>0.107600</td>
+    </tr>
+    <tr>
+      <td>188</td>
+      <td>0.088600</td>
+    </tr>
+    <tr>
+      <td>189</td>
+      <td>0.082100</td>
+    </tr>
+    <tr>
+      <td>190</td>
+      <td>0.118300</td>
+    </tr>
+    <tr>
+      <td>191</td>
+      <td>0.066500</td>
+    </tr>
+    <tr>
+      <td>192</td>
+      <td>0.103400</td>
+    </tr>
+    <tr>
+      <td>193</td>
+      <td>0.082200</td>
+    </tr>
+    <tr>
+      <td>194</td>
+      <td>0.156200</td>
+    </tr>
+    <tr>
+      <td>195</td>
+      <td>0.082900</td>
+    </tr>
+    <tr>
+      <td>196</td>
+      <td>0.053700</td>
+    </tr>
+    <tr>
+      <td>197</td>
+      <td>0.052300</td>
+    </tr>
+    <tr>
+      <td>198</td>
+      <td>0.060400</td>
+    </tr>
+    <tr>
+      <td>199</td>
+      <td>0.065800</td>
+    </tr>
+    <tr>
+      <td>200</td>
+      <td>0.087200</td>
+    </tr>
+    <tr>
+      <td>201</td>
+      <td>0.091500</td>
+    </tr>
+    <tr>
+      <td>202</td>
+      <td>0.056800</td>
+    </tr>
+    <tr>
+      <td>203</td>
+      <td>0.093500</td>
+    </tr>
+    <tr>
+      <td>204</td>
+      <td>0.088000</td>
+    </tr>
+    <tr>
+      <td>205</td>
+      <td>0.077500</td>
+    </tr>
+    <tr>
+      <td>206</td>
+      <td>0.052200</td>
+    </tr>
+    <tr>
+      <td>207</td>
+      <td>0.073000</td>
+    </tr>
+    <tr>
+      <td>208</td>
+      <td>0.084000</td>
+    </tr>
+    <tr>
+      <td>209</td>
+      <td>0.086200</td>
+    </tr>
+    <tr>
+      <td>210</td>
+      <td>0.076300</td>
+    </tr>
+    <tr>
+      <td>211</td>
+      <td>0.061200</td>
+    </tr>
+    <tr>
+      <td>212</td>
+      <td>0.041400</td>
+    </tr>
+    <tr>
+      <td>213</td>
+      <td>0.057200</td>
+    </tr>
+    <tr>
+      <td>214</td>
+      <td>0.065400</td>
+    </tr>
+    <tr>
+      <td>215</td>
+      <td>0.041500</td>
+    </tr>
+    <tr>
+      <td>216</td>
+      <td>0.042200</td>
+    </tr>
+    <tr>
+      <td>217</td>
+      <td>0.065700</td>
+    </tr>
+    <tr>
+      <td>218</td>
+      <td>0.056100</td>
+    </tr>
+    <tr>
+      <td>219</td>
+      <td>0.046400</td>
+    </tr>
+    <tr>
+      <td>220</td>
+      <td>0.056600</td>
+    </tr>
+    <tr>
+      <td>221</td>
+      <td>0.062000</td>
+    </tr>
+    <tr>
+      <td>222</td>
+      <td>0.077000</td>
+    </tr>
+    <tr>
+      <td>223</td>
+      <td>0.082900</td>
+    </tr>
+    <tr>
+      <td>224</td>
+      <td>0.046800</td>
+    </tr>
+    <tr>
+      <td>225</td>
+      <td>0.076400</td>
+    </tr>
+    <tr>
+      <td>226</td>
+      <td>0.039500</td>
+    </tr>
+    <tr>
+      <td>227</td>
+      <td>0.037800</td>
+    </tr>
+    <tr>
+      <td>228</td>
+      <td>0.045500</td>
+    </tr>
+    <tr>
+      <td>229</td>
+      <td>0.077600</td>
+    </tr>
+    <tr>
+      <td>230</td>
+      <td>0.073400</td>
+    </tr>
+    <tr>
+      <td>231</td>
+      <td>0.054100</td>
+    </tr>
+    <tr>
+      <td>232</td>
+      <td>0.044400</td>
+    </tr>
+    <tr>
+      <td>233</td>
+      <td>0.058500</td>
+    </tr>
+    <tr>
+      <td>234</td>
+      <td>0.053800</td>
+    </tr>
+    <tr>
+      <td>235</td>
+      <td>0.039500</td>
+    </tr>
+    <tr>
+      <td>236</td>
+      <td>0.028500</td>
+    </tr>
+    <tr>
+      <td>237</td>
+      <td>0.058700</td>
+    </tr>
+    <tr>
+      <td>238</td>
+      <td>0.037500</td>
+    </tr>
+    <tr>
+      <td>239</td>
+      <td>0.043700</td>
+    </tr>
+    <tr>
+      <td>240</td>
+      <td>0.036500</td>
+    </tr>
+    <tr>
+      <td>241</td>
+      <td>0.050600</td>
+    </tr>
+    <tr>
+      <td>242</td>
+      <td>0.041500</td>
+    </tr>
+    <tr>
+      <td>243</td>
+      <td>0.023900</td>
+    </tr>
+    <tr>
+      <td>244</td>
+      <td>0.039600</td>
+    </tr>
+    <tr>
+      <td>245</td>
+      <td>0.071200</td>
+    </tr>
+    <tr>
+      <td>246</td>
+      <td>0.029500</td>
+    </tr>
+    <tr>
+      <td>247</td>
+      <td>0.026500</td>
+    </tr>
+    <tr>
+      <td>248</td>
+      <td>0.032400</td>
+    </tr>
+    <tr>
+      <td>249</td>
+      <td>0.047700</td>
+    </tr>
+    <tr>
+      <td>250</td>
+      <td>0.043100</td>
+    </tr>
+    <tr>
+      <td>251</td>
+      <td>0.047700</td>
+    </tr>
+    <tr>
+      <td>252</td>
+      <td>0.026300</td>
+    </tr>
+    <tr>
+      <td>253</td>
+      <td>0.051000</td>
+    </tr>
+    <tr>
+      <td>254</td>
+      <td>0.055200</td>
+    </tr>
+    <tr>
+      <td>255</td>
+      <td>0.040100</td>
+    </tr>
+    <tr>
+      <td>256</td>
+      <td>0.029200</td>
+    </tr>
+    <tr>
+      <td>257</td>
+      <td>0.028000</td>
+    </tr>
+    <tr>
+      <td>258</td>
+      <td>0.032400</td>
+    </tr>
+    <tr>
+      <td>259</td>
+      <td>0.056400</td>
+    </tr>
+    <tr>
+      <td>260</td>
+      <td>0.030100</td>
+    </tr>
+    <tr>
+      <td>261</td>
+      <td>0.055000</td>
+    </tr>
+    <tr>
+      <td>262</td>
+      <td>0.033100</td>
+    </tr>
+    <tr>
+      <td>263</td>
+      <td>0.020600</td>
+    </tr>
+    <tr>
+      <td>264</td>
+      <td>0.029700</td>
+    </tr>
+    <tr>
+      <td>265</td>
+      <td>0.067200</td>
+    </tr>
+    <tr>
+      <td>266</td>
+      <td>0.041800</td>
+    </tr>
+    <tr>
+      <td>267</td>
+      <td>0.034200</td>
+    </tr>
+    <tr>
+      <td>268</td>
+      <td>0.039600</td>
+    </tr>
+    <tr>
+      <td>269</td>
+      <td>0.045400</td>
+    </tr>
+    <tr>
+      <td>270</td>
+      <td>0.024600</td>
+    </tr>
+    <tr>
+      <td>271</td>
+      <td>0.029900</td>
+    </tr>
+    <tr>
+      <td>272</td>
+      <td>0.030900</td>
+    </tr>
+    <tr>
+      <td>273</td>
+      <td>0.028000</td>
+    </tr>
+    <tr>
+      <td>274</td>
+      <td>0.031800</td>
+    </tr>
+    <tr>
+      <td>275</td>
+      <td>0.027400</td>
+    </tr>
+    <tr>
+      <td>276</td>
+      <td>0.021900</td>
+    </tr>
+    <tr>
+      <td>277</td>
+      <td>0.064100</td>
+    </tr>
+    <tr>
+      <td>278</td>
+      <td>0.034900</td>
+    </tr>
+    <tr>
+      <td>279</td>
+      <td>0.059000</td>
+    </tr>
+    <tr>
+      <td>280</td>
+      <td>0.026200</td>
+    </tr>
+    <tr>
+      <td>281</td>
+      <td>0.033600</td>
+    </tr>
+    <tr>
+      <td>282</td>
+      <td>0.036200</td>
+    </tr>
+    <tr>
+      <td>283</td>
+      <td>0.038700</td>
+    </tr>
+    <tr>
+      <td>284</td>
+      <td>0.029800</td>
+    </tr>
+    <tr>
+      <td>285</td>
+      <td>0.031200</td>
+    </tr>
+    <tr>
+      <td>286</td>
+      <td>0.038100</td>
+    </tr>
+    <tr>
+      <td>287</td>
+      <td>0.024300</td>
+    </tr>
+    <tr>
+      <td>288</td>
+      <td>0.023000</td>
+    </tr>
+    <tr>
+      <td>289</td>
+      <td>0.029200</td>
+    </tr>
+    <tr>
+      <td>290</td>
+      <td>0.047100</td>
+    </tr>
+    <tr>
+      <td>291</td>
+      <td>0.025700</td>
+    </tr>
+    <tr>
+      <td>292</td>
+      <td>0.044700</td>
+    </tr>
+    <tr>
+      <td>293</td>
+      <td>0.027000</td>
+    </tr>
+    <tr>
+      <td>294</td>
+      <td>0.035400</td>
+    </tr>
+    <tr>
+      <td>295</td>
+      <td>0.040800</td>
+    </tr>
+    <tr>
+      <td>296</td>
+      <td>0.029500</td>
+    </tr>
+    <tr>
+      <td>297</td>
+      <td>0.035400</td>
+    </tr>
+    <tr>
+      <td>298</td>
+      <td>0.028200</td>
+    </tr>
+    <tr>
+      <td>299</td>
+      <td>0.039600</td>
+    </tr>
+    <tr>
+      <td>300</td>
+      <td>0.028800</td>
+    </tr>
+  </tbody>
+</table><p></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TrainOutput(global_step=300, training_loss=0.2689305164354543, metrics={&#39;train_runtime&#39;: 192.0013, &#39;train_samples_per_second&#39;: 12.5, &#39;train_steps_per_second&#39;: 1.562, &#39;total_flos&#39;: 6322328115609600.0, &#39;train_loss&#39;: 0.2689305164354543})
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can decide to save the model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">save_model</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">if</span> <span class="n">save_model</span><span class="p">:</span>
+    <span class="n">trainer</span><span class="o">.</span><span class="n">save_model</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="evaluate-fine-tuned-model">
+<h2>Evaluate Fine-tuned Model<a class="headerlink" href="#evaluate-fine-tuned-model" title="Link to this heading">#</a></h2>
+<p>After the fine tuning, we can evaluate if we achieved our desired outcome. Let us define a different prompt and invoke the fine-tuned model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">example_prompt</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;write a python function that returns the least common denominator of all elements in a list.&quot;</span>
+
+<span class="n">sequences</span> <span class="o">=</span> <span class="n">adapted_pipeline</span><span class="p">(</span>
+    <span class="n">text_inputs</span><span class="o">=</span><span class="n">example_prompt</span><span class="p">,</span>
+    <span class="n">do_sample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">top_k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">num_return_sequences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">eos_token_id</span><span class="o">=</span><span class="n">my_tokenizer</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">,</span>
+    <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.2</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Display the generated text using the Markdown display.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Markdown</span><span class="p">(</span><span class="n">sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;generated_text&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<p>write a python function that returns the least common denominator of all elements in a list. https://www.geeksforgeeks.org/least-common-denominator/</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">lcm_of_elements</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">arr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="p">(</span><span class="n">le</span><span class="p">,</span> <span class="n">rt</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m</span> <span class="o">==</span> <span class="n">left</span> <span class="ow">or</span> <span class="n">m</span> <span class="o">==</span> <span class="n">m</span> <span class="o">*</span> <span class="n">right</span> <span class="o">/</span> <span class="n">m</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">m</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">m</span>
+</pre></div>
+</div>
+<p>Test List:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">test_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;assert lcm_of_elements([2,2,1])-&gt;1&#39;</span><span class="p">,</span> <span class="s1">&#39;assert lcm_of_elements([1,5,7,1])-&gt;5&#39;</span><span class="p">,</span> <span class="s1">&#39;assert lcm_of_elements([12,45,67,12])-&gt;45&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>In this notebook you quantized a Llama model, then added LoRA to adapt the model to be able to train on a custom dataset. You also defined chat templates that guided the fine-tuning process.</p>
+<p>Now, you may be wondering how much bigger is the adapted model. Let’s have a look.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchinfo</span><span class="w"> </span><span class="kn">import</span> <span class="n">summary</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_quant</span> <span class="o">=</span> <span class="n">summary</span><span class="p">(</span><span class="n">quantized_model</span><span class="p">,</span> <span class="n">input_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">112</span><span class="p">,</span> <span class="mi">112</span><span class="p">),</span> <span class="n">col_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;input_size&quot;</span><span class="p">,</span> <span class="s2">&quot;output_size&quot;</span><span class="p">,</span> <span class="s2">&quot;num_params&quot;</span><span class="p">,</span> <span class="s2">&quot;mult_adds&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">])</span>
+<span class="n">model_quant</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adapt_model_quant</span> <span class="o">=</span> <span class="n">summary</span><span class="p">(</span><span class="n">adapted_model</span><span class="p">,</span> <span class="n">input_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">112</span><span class="p">,</span> <span class="mi">112</span><span class="p">),</span> <span class="n">col_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;input_size&quot;</span><span class="p">,</span> <span class="s2">&quot;output_size&quot;</span><span class="p">,</span> <span class="s2">&quot;num_params&quot;</span><span class="p">,</span> <span class="s2">&quot;mult_adds&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">])</span>
+<span class="n">adapt_model_quant</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved. Portions of this file consist of AI-generated content.</p>
+<p>SPDX-License-Identifier: MIT</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./specializing"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="finetune_distilbert.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">DistilBERT for Sentiment Analysis</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../optimizing.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Optimizing Computation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supported-hardware">🛠️ Supported Hardware</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-software-environment">⚡ Recommended Software Environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">🎯 Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-the-model-and-tokenizer">Get the Model and Tokenizer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-prompt">Sample Prompt</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-fine-tune-parameters">Define fine-tune parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-dataset-to-fine-tune-model">Get Dataset to fine-tune model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fine-tune-the-adapted-model">🚀 Fine-tune the Adapted Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluate-fine-tuned-model">Evaluate Fine-tuned Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Advanced Micro Devices, Inc.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <p>
+<div class="aem-Grid aem-Grid--16">
+<div class="aem-GridColumn aem-GridColumn--xxxlarge--none aem-GridColumn--xsmall--16 aem-GridColumn--offset--xsmall--0 aem-GridColumn--xlarge--none aem-GridColumn--xxlarge--none aem-GridColumn--default--none aem-GridColumn--offset--large--1 aem-GridColumn--xlarge--12 aem-GridColumn--offset--default--0 aem-GridColumn--xxlarge--10 aem-GridColumn--offset--xlarge--2 aem-GridColumn--offset--xxlarge--3 aem-GridColumn--offset--xxxlarge--4 aem-GridColumn--xsmall--none aem-GridColumn--large--none aem-GridColumn aem-GridColumn--large--14 aem-GridColumn--xxxlarge--8 aem-GridColumn--default--16">
+<div class="container-fluid sub-footer">
+
+<div class="row">
+<div class="col-xs-24">
+<p><a target="_blank" href="https://www.amd.com/en/corporate/copyright">Terms and Conditions</a> | <a target="_blank" href="https://www.amd.com/en/corporate/privacy">Privacy</a> | <a target="_blank" href="https://www.amd.com/en/corporate/cookies">Cookie Policy</a> | <a target="_blank" href="https://www.amd.com/en/corporate/trademarks">Trademarks</a> | <a target="_blank" href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf">Statement on Forced Labor</a> | <a target="_blank" href="https://www.amd.com/en/corporate/competition">Fair and Open Competition</a> <br> <a target="_blank" href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf">UK Tax Strategy</a> | <a target="_blank" href="https://docs.xilinx.com/v/u/9x6YvZKuWyhJId7y7RQQKA">Inclusive Terminology</a> | <a href="#cookiessettings" class="ot-sdk-show-settings">Cookies Settings</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="cookie-consent" class="cookie-consent">
+<p>This website uses cookies to ensure you get the best experience on our website. <a href="#" id="cookie-accept">Accept</a> | <a href="#" id="cookie-reject">Reject</a></p>
+</div>
+</p>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,854 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Image Classification using Yolov10 &#8212; AUP AI Tutorials</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'get-started/hf/yolov10';</script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Fine-tuned LAnguage Net Text-To-Text Transfer Transformer" href="flan-t5-small.html" />
+    <link rel="prev" title="Semantic Segmentation" href="semantic-segmentation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">AUP AI Tutorials</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    AUP AI Tutorials
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Paths</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../paths.html">Organization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">AI Fundamentals</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../fundamentals.html">Artificial Intelligence Fundamentals</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../fundamentals/math-fundamentals.html">Mathematics for AI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../fundamentals/ml-fundamentals.html">Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../fundamentals/genai-fundamentals.html">Generative AI</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Setup Environment</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../env/env.html">Configuring the Environment</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../env/env-cpu.html">Setting PyTorch Environment for CPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/env-gpu.html">Setting PyTorch Environment for GPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/env-gpu-windows.html">Setting PyTorch Environment for GPU</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../get-started.html">Get Started with AI on AMD Platforms</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../hf.html">Using Hugging Face pre-trained models</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="mnist-mlp.html">MNIST Classification with an MLP Hugging Face Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="semantic-segmentation.html">Semantic Segmentation</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Image Classification using Yolov10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flan-t5-small.html">Fine-tuned LAnguage Net Text-To-Text Transfer Transformer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gemma2.html">Google Enhanced Multimodal Machine Learning 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="whisper.html">OpenAI Whisper - Speech Recognition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="phi-3-vision.html">Phi-3-vision Instruct Open Multimodal Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="phi-3-mini-instruct.html">Phi-3 Instruct Open Model</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../pytorch.html">Using PyTorch Hub Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pytorch/lenet.html">LetNet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pytorch/resnet50.html">Residual Network - ResNet50</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../genai.html">Generative AI on AMD platforms</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Design your own Model</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../design-model.html">Design your own model on AMD Platforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../train/mandelbrot_dataset.html">Create Mandelbrot Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../train/mandelbrot_train.html">Mandelbrot Multi-Layer Perceptron Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../train/fashion_mnist_cnn.html">Machine Learning Training and Inference with PyTorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../train/pneumonia_detection_pt.html">Model Training for Pneumonia Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../train/yolov8_custom_dataset.html">Train YOLOv8 on a Custom Dataset using CLI</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Specializing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../specializing.html">Specializing a pre-trained Model</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../specializing/resnet_transfer_learning.html">Re-training a model using PyTorch and Transfer Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../specializing/finetune_distilbert.html">DistilBERT for Sentiment Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../specializing/llama3-fine-tuning.html">Fine-tune Llama 3.2 to generate Markdown friendly Python functions</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimizing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../optimizing.html">Optimizing Computation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Model Serving</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../serving.html">Model Serving</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contribute</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to AUP AI Tutorials</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/get-started/hf/yolov10.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Image Classification using Yolov10</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supported-hardware">🛠️ Supported Hardware</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-software-environment">⚡ Recommended Software Environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">🎯 Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-yolov10-on-an-amd-platform">🚀 Run Yolov10 on an AMD Platform</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="image-classification-using-yolov10">
+<h1>Image Classification using Yolov10<a class="headerlink" href="#image-classification-using-yolov10" title="Link to this heading">#</a></h1>
+<p>YOLOv10: Real-Time End-to-End Object Detection. YOLOv10 achieves state-of-the-art performance with significantly reduced computational overhead.</p>
+<section id="supported-hardware">
+<h2>🛠️ Supported Hardware<a class="headerlink" href="#supported-hardware" title="Link to this heading">#</a></h2>
+<p>This notebook can run in a CPU or in a GPU.</p>
+<p>✅ AMD Instinct™ Accelerators<br />
+✅ AMD Radeon™ RX/PRO Graphics Cards<br />
+✅ AMD EPYC™ Processors<br />
+✅ AMD Ryzen™ (AI) Processors</p>
+<p>Suggested hardware: <strong>AI PC powered by AMD Ryzen™ AI Processors</strong></p>
+</section>
+<section id="recommended-software-environment">
+<h2>⚡ Recommended Software Environment<a class="headerlink" href="#recommended-software-environment" title="Link to this heading">#</a></h2>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Linux</label><div class="sd-tab-content docutils">
+<ul class="simple">
+<li><p><a class="reference external" href="https://amdresearch.github.io/aup-ai-tutorials//env/env-gpu.html">Install Docker container</a></p></li>
+<li><p><a class="reference external" href="https://amdresearch.github.io/aup-ai-tutorials//env/env-cpu.html">Install PyTorch</a></p></li>
+</ul>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+Windows</label><div class="sd-tab-content docutils">
+<ul class="simple">
+<li><p><a class="reference external" href="https://amdresearch.github.io/aup-ai-tutorials//env/env-gpu-windows.html">Install Direct-ML</a></p></li>
+<li><p><a class="reference external" href="https://amdresearch.github.io/aup-ai-tutorials//env/env-cpu.html">Install PyTorch</a></p></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="goals">
+<h2>🎯 Goals<a class="headerlink" href="#goals" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Show you how to download several models from HuggingFace</p></li>
+<li><p>Run Yolov10 on an AMD platform</p></li>
+<li><p>Run inference with Yolov10 on an image</p></li>
+<li><p>Compare Yolov10 different model sizes</p></li>
+</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p>Image classification using <a class="reference external" href="https://huggingface.co/jameslahm/yolov10m">Yolov10</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2405.14458">YOLOv10: Real-Time End-to-End Object Detection Paper</a></p></li>
+<li><p><a class="reference external" href="https://github.com/THU-MIG/yolov10">YOLOv10: Real-Time End-to-End Object Detection GitHub</a></p></li>
+<li><p><a class="reference external" href="https://docs.ultralytics.com/models/yolov10/">YOLOv10: Real-Time End-to-End Object Detection Docs</a></p></li>
+</ul>
+</div>
+<p>Install the required libraries</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>ultralytics<span class="w"> </span>git+https://github.com/THU-MIG/yolov10.git
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="run-yolov10-on-an-amd-platform">
+<h2>🚀 Run Yolov10 on an AMD Platform<a class="headerlink" href="#run-yolov10-on-an-amd-platform" title="Link to this heading">#</a></h2>
+<p>Import packages, in particular <a class="reference external" href="https://huggingface.co/docs/transformers/en/index">Hugging Face <code class="docutils literal notranslate"><span class="pre">transformers</span></code></a> that helps downloading the model from the Hugging Face repository.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ultralytics</span><span class="w"> </span><span class="kn">import</span> <span class="n">YOLOv10</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Get the yolov10 (medium) pre-trained model using the <code class="docutils literal notranslate"><span class="pre">YOLOv10</span></code> API</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">YOLOv10</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">&#39;jameslahm/yolov10m&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "61b39e7acec446d2886f020d1bc18739", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "f7e87123b2884c3fad78afb33afd6644", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can print the the model to see the different layers.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If a GPU is available, move the model to the GPU</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">device</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>device=device(type=&#39;cuda&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s run inference using a sample image and then display the result.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_img</span> <span class="o">=</span> <span class="s1">&#39;000000039769.jpg&#39;</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;http://images.cocodataset.org/val2017/</span><span class="si">{</span><span class="n">test_img</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">save_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">test_img</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading http://images.cocodataset.org/val2017/000000039769.jpg to &#39;000000039769.jpg&#39;...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|█████████████████████████████████████████████████████████████████████████████████████████████████| 169k/169k [00:00&lt;00:00, 605kB/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>image 1/1 /ROCM_APP/get-started/hf/000000039769.jpg: 480x640 2 cats, 1 couch, 2 remotes, 1437.8ms
+Speed: 1.4ms preprocess, 1437.8ms inference, 149.1ms postprocess per image at shape (1, 3, 480, 640)
+Results saved to <span class=" -Color -Color-Bold">runs/detect/predict</span>
+</pre></div>
+</div>
+<img alt="../../_images/1018f96ddbf81b306d98ac67f3df8c261e723081338e60a3da2ba5d0ae8ba764.png" src="../../_images/1018f96ddbf81b306d98ac67f3df8c261e723081338e60a3da2ba5d0ae8ba764.png" />
+</div>
+</div>
+<p>Let’s run multiple inferences inside of a loop</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;000000039769.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;000000002157.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;000000032610.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;000000037777.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;000000057597.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;000000087470.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;000000098520.jpg&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">test_img</span> <span class="ow">in</span> <span class="n">images</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;http://images.cocodataset.org/val2017/</span><span class="si">{</span><span class="n">test_img</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">save_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">test_img</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found http://images.cocodataset.org/val2017/000000039769.jpg locally at 000000039769.jpg
+image 1/1 /ROCM_APP/get-started/hf/000000039769.jpg: 480x640 2 cats, 1 couch, 2 remotes, 13.6ms
+Speed: 1.3ms preprocess, 13.6ms inference, 1.2ms postprocess per image at shape (1, 3, 480, 640)
+Results saved to <span class=" -Color -Color-Bold">runs/detect/predict</span>
+</pre></div>
+</div>
+<img alt="../../_images/1018f96ddbf81b306d98ac67f3df8c261e723081338e60a3da2ba5d0ae8ba764.png" src="../../_images/1018f96ddbf81b306d98ac67f3df8c261e723081338e60a3da2ba5d0ae8ba764.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading http://images.cocodataset.org/val2017/000000002157.jpg to &#39;000000002157.jpg&#39;...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|█████████████████████████████████████████████████████████████████████████████████████████████████| 122k/122k [00:00&lt;00:00, 385kB/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>image 1/1 /ROCM_APP/get-started/hf/000000002157.jpg: 448x640 11 wine glasss, 2 cups, 2 knifes, 1 cake, 1 dining table, 1410.0ms
+Speed: 1.9ms preprocess, 1410.0ms inference, 1.0ms postprocess per image at shape (1, 3, 448, 640)
+Results saved to <span class=" -Color -Color-Bold">runs/detect/predict</span>
+</pre></div>
+</div>
+<img alt="../../_images/0e33b5ead3bc854d432c5a8f79950eb8118a2e0b020d9eb34693f738e20bc586.png" src="../../_images/0e33b5ead3bc854d432c5a8f79950eb8118a2e0b020d9eb34693f738e20bc586.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading http://images.cocodataset.org/val2017/000000032610.jpg to &#39;000000032610.jpg&#39;...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|█████████████████████████████████████████████████████████████████████████████████████████████████| 146k/146k [00:00&lt;00:00, 446kB/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>image 1/1 /ROCM_APP/get-started/hf/000000032610.jpg: 448x640 1 backpack, 1 tv, 3 laptops, 1 keyboard, 14.3ms
+Speed: 1.5ms preprocess, 14.3ms inference, 1.0ms postprocess per image at shape (1, 3, 448, 640)
+Results saved to <span class=" -Color -Color-Bold">runs/detect/predict</span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../_images/bcc4de1aa36fb2694d56f3fc70fc6693e9293959edaa2ff643a35e4d075d2f3d.png" src="../../_images/bcc4de1aa36fb2694d56f3fc70fc6693e9293959edaa2ff643a35e4d075d2f3d.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading http://images.cocodataset.org/val2017/000000037777.jpg to &#39;000000037777.jpg&#39;...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|███████████████████████████████████████████████████████████████████████████████████████████████| 39.9k/39.9k [00:00&lt;00:00, 447kB/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>image 1/1 /ROCM_APP/get-started/hf/000000037777.jpg: 448x640 1 banana, 5 oranges, 2 chairs, 1 dining table, 1 oven, 1 refrigerator, 16.0ms
+Speed: 2.6ms preprocess, 16.0ms inference, 1.1ms postprocess per image at shape (1, 3, 448, 640)
+Results saved to <span class=" -Color -Color-Bold">runs/detect/predict</span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../_images/117c1926c4688d7be9d0a109f2a9b38939f3add4cd2bb30012867c67058f4f25.png" src="../../_images/117c1926c4688d7be9d0a109f2a9b38939f3add4cd2bb30012867c67058f4f25.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading http://images.cocodataset.org/val2017/000000057597.jpg to &#39;000000057597.jpg&#39;...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|█████████████████████████████████████████████████████████████████████████████████████████████████| 193k/193k [00:00&lt;00:00, 689kB/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>image 1/1 /ROCM_APP/get-started/hf/000000057597.jpg: 448x640 6 persons, 1 car, 1 sports ball, 11.8ms
+Speed: 1.5ms preprocess, 11.8ms inference, 1.0ms postprocess per image at shape (1, 3, 448, 640)
+Results saved to <span class=" -Color -Color-Bold">runs/detect/predict</span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../_images/7d4d96e60c28d218afb50f7dde43bf9163712b8a3406de3e8c78277445efe7a6.png" src="../../_images/7d4d96e60c28d218afb50f7dde43bf9163712b8a3406de3e8c78277445efe7a6.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading http://images.cocodataset.org/val2017/000000087470.jpg to &#39;000000087470.jpg&#39;...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|█████████████████████████████████████████████████████████████████████████████████████████████████| 238k/238k [00:00&lt;00:00, 558kB/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>image 1/1 /ROCM_APP/get-started/hf/000000087470.jpg: 480x640 3 persons, 13 cows, 13.1ms
+Speed: 1.9ms preprocess, 13.1ms inference, 0.7ms postprocess per image at shape (1, 3, 480, 640)
+Results saved to <span class=" -Color -Color-Bold">runs/detect/predict</span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../_images/5487e1f12a710633854a503c9527b4a1c045202586768b769eac6382d97e321a.png" src="../../_images/5487e1f12a710633854a503c9527b4a1c045202586768b769eac6382d97e321a.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading http://images.cocodataset.org/val2017/000000098520.jpg to &#39;000000098520.jpg&#39;...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|█████████████████████████████████████████████████████████████████████████████████████████████████| 118k/118k [00:00&lt;00:00, 381kB/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>image 1/1 /ROCM_APP/get-started/hf/000000098520.jpg: 480x640 1 airplane, 2 trucks, 14.4ms
+Speed: 2.4ms preprocess, 14.4ms inference, 1.0ms postprocess per image at shape (1, 3, 480, 640)
+Results saved to <span class=" -Color -Color-Bold">runs/detect/predict</span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../_images/0a8f76dcc7dff4c5e6b75999713ee10f144ac780543c4af5073ea2ff84283d28.png" src="../../_images/0a8f76dcc7dff4c5e6b75999713ee10f144ac780543c4af5073ea2ff84283d28.png" />
+</div>
+</div>
+<p>There are a number of <code class="docutils literal notranslate"><span class="pre">Yolov10</span></code> models available, each with a different number of parameters. Running the cell below you will download 6 different <code class="docutils literal notranslate"><span class="pre">Yolov10</span></code> models and observe the number of parameters and the size of each model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;yolov10n&#39;</span><span class="p">,</span> <span class="s1">&#39;yolov10s&#39;</span><span class="p">,</span> <span class="s1">&#39;yolov10m&#39;</span><span class="p">,</span> <span class="s1">&#39;yolov10b&#39;</span><span class="p">,</span> <span class="s1">&#39;yolov10l&#39;</span><span class="p">,</span> <span class="s1">&#39;yolov10x&#39;</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">model_size</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="n">param_size</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+        <span class="n">param_size</span> <span class="o">+=</span> <span class="n">param</span><span class="o">.</span><span class="n">nelement</span><span class="p">()</span> <span class="o">*</span> <span class="n">param</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span>
+    <span class="n">buffer_size</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">buffer</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">buffers</span><span class="p">():</span>
+        <span class="n">buffer_size</span> <span class="o">+=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">nelement</span><span class="p">()</span> <span class="o">*</span> <span class="n">buffer</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">param_size</span> <span class="o">+</span> <span class="n">buffer_size</span>
+
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">YOLOv10</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;jameslahm/</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">size_all_mb</span> <span class="o">=</span>  <span class="p">(</span><span class="n">model_size</span><span class="p">(</span><span class="n">model</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1024</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">total_params</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Model: </span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s1"> with </span><span class="si">{</span><span class="n">total_params</span><span class="si">:</span><span class="s1">10,</span><span class="si">}</span><span class="s1"> parameters, size: </span><span class="si">{</span><span class="n">size_all_mb</span><span class="si">:</span><span class="s1">7.3f</span><span class="si">}</span><span class="s1">MB&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "39d2e02174404af2b3e508cecac4d879", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "50a70f07cf8c41dcb514dc5df04c9e40", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: yolov10n with  2,775,520 parameters, size:  10.667MB
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c05ea7c83bde4178b09a17a09ea5f83a", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "21c1a1a1890943e79fbc3596832ca3db", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: yolov10s with  8,128,272 parameters, size:  31.169MB
+Model: yolov10m with 16,576,768 parameters, size:  63.494MB
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "2708a02d3a014b12ba83b3787e40a9df", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "02b076c9093a460ca3efa62f224a193e", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: yolov10b with 20,574,384 parameters, size:  78.790MB
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6fe2a17d80614d74b48cdbafb007902e", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "43e18806ead94af2900bfbe163a67bb6", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: yolov10l with 25,888,688 parameters, size:  99.132MB
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "44b3b547a7fe4956890d12e22a8b7346", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "76c0cc5475194b268e7fc0a70c231419", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: yolov10x with 31,808,960 parameters, size: 121.883MB
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Exercise for the reader, replace the <code class="docutils literal notranslate"><span class="pre">yolov10m</span></code> model (second cell of this notebook) with any other <code class="docutils literal notranslate"><span class="pre">Yolov10</span></code> model available and re run the notebook. Do you notice any difference in the accuracy of the classification?</p>
+</div>
+<hr class="docutils" />
+<p>Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.</p>
+<p>SPDX-License-Identifier: MIT</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./get-started/hf"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="semantic-segmentation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Semantic Segmentation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="flan-t5-small.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Fine-tuned LAnguage Net Text-To-Text Transfer Transformer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supported-hardware">🛠️ Supported Hardware</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-software-environment">⚡ Recommended Software Environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">🎯 Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-yolov10-on-an-amd-platform">🚀 Run Yolov10 on an AMD Platform</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Advanced Micro Devices, Inc.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <p>
+<div class="aem-Grid aem-Grid--16">
+<div class="aem-GridColumn aem-GridColumn--xxxlarge--none aem-GridColumn--xsmall--16 aem-GridColumn--offset--xsmall--0 aem-GridColumn--xlarge--none aem-GridColumn--xxlarge--none aem-GridColumn--default--none aem-GridColumn--offset--large--1 aem-GridColumn--xlarge--12 aem-GridColumn--offset--default--0 aem-GridColumn--xxlarge--10 aem-GridColumn--offset--xlarge--2 aem-GridColumn--offset--xxlarge--3 aem-GridColumn--offset--xxxlarge--4 aem-GridColumn--xsmall--none aem-GridColumn--large--none aem-GridColumn aem-GridColumn--large--14 aem-GridColumn--xxxlarge--8 aem-GridColumn--default--16">
+<div class="container-fluid sub-footer">
+
+<div class="row">
+<div class="col-xs-24">
+<p><a target="_blank" href="https://www.amd.com/en/corporate/copyright">Terms and Conditions</a> | <a target="_blank" href="https://www.amd.com/en/corporate/privacy">Privacy</a> | <a target="_blank" href="https://www.amd.com/en/corporate/cookies">Cookie Policy</a> | <a target="_blank" href="https://www.amd.com/en/corporate/trademarks">Trademarks</a> | <a target="_blank" href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf">Statement on Forced Labor</a> | <a target="_blank" href="https://www.amd.com/en/corporate/competition">Fair and Open Competition</a> <br> <a target="_blank" href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf">UK Tax Strategy</a> | <a target="_blank" href="https://docs.xilinx.com/v/u/9x6YvZKuWyhJId7y7RQQKA">Inclusive Terminology</a> | <a href="#cookiessettings" class="ot-sdk-show-settings">Cookies Settings</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="cookie-consent" class="cookie-consent">
+<p>This website uses cookies to ensure you get the best experience on our website. <a href="#" id="cookie-accept">Accept</a> | <a href="#" id="cookie-reject">Reject</a></p>
+</div>
+</p>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
