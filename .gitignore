@@ -1,0 +1,12 @@
+# Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+
+_build/
+webmockup/
+.ipynb_checkpoints/
+*.pt
+*.onnx
+*.npy
+train/dataset/
+*.tar.gz
+jbook/jbook/

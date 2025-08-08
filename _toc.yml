@@ -1,0 +1,76 @@
+# Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+parts:
+  - caption: Paths
+    chapters:
+      - file: paths
+  - caption: AI Fundamentals
+    chapters:
+      - file: fundamentals
+        sections:
+          - file: fundamentals/math-fundamentals
+          - file: fundamentals/ml-fundamentals
+          - file: fundamentals/genai-fundamentals
+  - caption: Setup Environment
+    chapters:
+      - file: env/env
+        sections:
+          - file: env/env-cpu
+          - file: env/env-gpu
+          - file: env/env-gpu-windows
+  - caption: Get Started
+    chapters:
+      - file: get-started
+        sections:
+          - file: get-started/hf
+            sections:
+              - file: get-started/hf/mnist-mlp
+              - file: get-started/hf/semantic-segmentation
+              - file: get-started/hf/yolov10
+              - file: get-started/hf/flan-t5-small
+              - file: get-started/hf/gemma2
+              - file: get-started/hf/whisper
+              - file: get-started/hf/phi-3-vision
+              - file: get-started/hf/phi-3-mini-instruct
+          - file: get-started/pytorch
+            sections:          
+              - file: get-started/pytorch/lenet
+              - file: get-started/pytorch/resnet50
+          - file: get-started/genai
+  - caption: Design your own Model
+    chapters:
+      - file: design-model
+        sections:
+          - file: train/mandelbrot_dataset
+          - file: train/mandelbrot_train
+          - file: train/fashion_mnist_cnn
+          - file: train/pneumonia_detection_pt
+          - file: train/yolov8_custom_dataset
+  - caption: Specializing
+    chapters:
+      - file: specializing
+        sections:
+          - file: specializing/resnet_transfer_learning
+          - file: specializing/finetune_distilbert
+          - file: specializing/llama3-fine-tuning
+  - caption: Optimizing
+    chapters:
+      - file: optimizing
+  - caption: Tutorials
+    chapters:
+      - file: tutorials
+  - caption: Model Serving
+    chapters:
+      - file: serving
+  - caption: Glossary
+    chapters:
+      - file: glossary
+  - caption: Contribute
+    chapters:
+      - file: CONTRIBUTING

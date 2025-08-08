@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-License-Identifier: MIT
+
+python3 -m venv jbook
+source jbook/bin/activate
+python -m pip install -r jb_requirements.txt
+deactivate
