@@ -46,5 +46,5 @@ pyppeteer
 myst-nb
 ipywidgets
 onnxruntime
-"cmake<4.0"
+cmake<4.0
 amd-quark
