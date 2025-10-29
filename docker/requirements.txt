@@ -45,3 +45,6 @@ sphinx_design
 pyppeteer
 myst-nb
 ipywidgets
+onnxruntime
+"cmake<4.0"
+amd-quark
