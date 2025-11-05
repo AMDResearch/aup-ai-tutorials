@@ -49,4 +49,3 @@ onnxruntime
 cmake<4.0
 amd-quark
 seaborn
-sklearn
