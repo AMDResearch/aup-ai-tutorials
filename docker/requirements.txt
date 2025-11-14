@@ -49,3 +49,9 @@ onnxruntime
 cmake<4.0
 amd-quark
 seaborn
+notebook
+safetensors
+huggingface_hub[cli]
+lm_eval
+nltk
+optimum[amd]
