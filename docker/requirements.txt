@@ -5,7 +5,7 @@ matplotlib
 jupyter
 jupyterlab
 jupyterlab_myst
-transformers
+transformers==4.56.0
 SentencePiece
 accelerate
 tiktoken
@@ -47,7 +47,7 @@ myst-nb
 ipywidgets
 onnxruntime
 cmake<4.0
-amd-quark
+amd-quark==0.10
 seaborn
 notebook
 safetensors
@@ -55,3 +55,4 @@ huggingface_hub[cli]
 lm_eval
 nltk
 optimum[amd]
+pygit2
