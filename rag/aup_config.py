@@ -5,6 +5,7 @@
 import logging
 import subprocess
 import time
+import os
 
 
 def message_string(proc: subprocess.CompletedProcess) -> str:
@@ -15,13 +16,23 @@ def message_string(proc: subprocess.CompletedProcess) -> str:
     return f"failed with return code {proc.returncode}."
 
 
-def aup_setup(pgk_update: bool=False) -> None:
+def aup_setup(pgk_update: bool=False, zstd_install: bool=False) -> None:
     """ Setup Environment by installing required packages"""
     if pgk_update:
         proc = subprocess.run(["sudo", "apt", "update"], check=True)
         proc = subprocess.run(["sudo", "apt", "install", "-y", "vim"],
                               check=True)
         logging.info("System packages updated %s.", message_string(proc))
+
+    if zstd_install:
+        proc = subprocess.run(["git", "clone", "https://github.com/facebook/zstd"], check=True)
+        os.chdir("/workspace/zstd")
+        proc = subprocess.run(["cmake", "-S", ".", "-B", "build-cmake-debug", "-G", "Ninja", "-DCMAKE_OSX_ARCHITECTURES='x86_64'"], check=True)
+        os.chdir("/workspace/zstd/build-cmake-debug")
+        proc = subprocess.run(["ninja"], check=True)
+        proc = subprocess.run(["sudo", "ninja", "install"], check=True)
+        logging.info("Zstd installed %s.", message_string(proc))
+        os.chdir("/workspace/")
 
     proc = subprocess.run(["python3", "-m", "pip", "install", "--upgrade", "pip"], check=True)
     logging.info("Pip upgraded installed %s.", message_string(proc))
@@ -38,7 +49,7 @@ def aup_setup(pgk_update: bool=False) -> None:
     cmd = "which ollama"
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output = proc.communicate()[0]
-    if output == b'':
+    if output == b"":
         cmd = "curl -fsSL https://ollama.com/install.sh | sh"
         proc = subprocess.run(cmd, check=True, shell=True)
         logging.info("Ollama installed %s.", message_string(proc))
@@ -63,4 +74,4 @@ def aup_setup(pgk_update: bool=False) -> None:
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    aup_setup(pgk_update=True)
+    aup_setup(pgk_update=False, zstd_install=True)
