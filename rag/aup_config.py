@@ -42,11 +42,15 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True) -> None:
     proc = run_capture(["python3", "-m", "pip", "install", "--upgrade", "pip"], check=True)
     logging.info("Pip upgraded installed %s.", message_string(proc))
 
+
+    proc = run_capture(["pip", "install", "--force-reinstall", "openai==2.21"],
+                       check=True)
+
     proc = run_capture(["pip", "install", "langchain", "langchain-community",
                         "langchain-experimental", "langchain-text-splitters",
                         "pypdf", "fastembed", "ollama", "langchain-ollama",
                         "faiss-cpu", "langchain-chroma", "chromadb", "bs4",
-                        "openai", "langchain-openai"],
+                        "langchain-openai"],
                        check=True)
 
     logging.info("Pip packages installed %s.", message_string(proc))
