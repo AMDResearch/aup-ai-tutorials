@@ -21,7 +21,7 @@ def run_capture(cmd, check: bool = False, **kwargs) -> subprocess.CompletedProce
     return subprocess.run(cmd, capture_output=True, text=True, check=check, **kwargs)
 
 
-def aup_setup(pgk_update: bool=False, zstd_install: bool=False) -> None:
+def aup_setup(pgk_update: bool=False, zstd_install: bool=True) -> None:
     """ Setup Environment by installing required packages"""
     if pgk_update:
         proc = run_capture(["sudo", "apt", "update"], check=True)
