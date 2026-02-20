@@ -29,7 +29,7 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True) -> None:
                            check=True)
         logging.info("System packages updated %s.", message_string(proc))
 
-    if zstd_install:
+    if zstd_install and not os.path.exists("/workspace/zstd"):
         proc = run_capture(["git", "clone", "https://github.com/facebook/zstd"], check=True)
         os.chdir("/workspace/zstd")
         proc = run_capture(["cmake", "-S", ".", "-B", "build-cmake-debug", "-G", "Ninja", "-DCMAKE_OSX_ARCHITECTURES='x86_64'"], check=True)
@@ -60,7 +60,7 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True) -> None:
         logging.info("Ollama installed %s.", message_string(proc))
 
     cmd = "ollama serve &"
-    proc = run_capture(cmd, check=True, shell=True)
+    proc = run_capture(cmd, check=False, shell=True)
     logging.info("Ollama running in the background %s.", message_string(proc))
     time.sleep(3)
 
