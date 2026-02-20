@@ -59,10 +59,19 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True) -> None:
         proc = run_capture(cmd, check=True, shell=True)
         logging.info("Ollama installed %s.", message_string(proc))
 
-    cmd = "ollama serve &"
-    proc = run_capture(cmd, check=False, shell=True)
-    logging.info("Ollama running in the background %s.", message_string(proc))
-    time.sleep(3)
+    proc = run_capture(["ollama", "list"], check=False)
+    if proc.returncode != 0:
+        subprocess.Popen(
+            ["ollama", "serve"],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+        logging.info("Ollama started in the background")
+        time.sleep(3)
+    else:
+        logging.info("Ollama is already running")
 
     ollama_model_list = ["llama3.1:8b", "nomic-embed-text:v1.5"]
     for model in ollama_model_list:
