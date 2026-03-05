@@ -71,9 +71,16 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
         logging.info("Zstd installed %s.", message_string(proc))
         os.chdir("/workspace/")
 
-    if graphviz_install and not os.path.exists("/workspace/graphviz") and amd_dev_cloud:
-        proc = run_capture(["git", "clone", "https://gitlab.com/graphviz/graphviz/"], check=True)
-        os.chdir("/workspace/graphviz")
+    filename = "graphviz-14.1.2.tar.gz"
+    graphviz_path = filename.replace(".tar.gz", "")
+    if graphviz_install and not os.path.exists(f"/workspace/{graphviz_path}") and amd_dev_cloud:
+        response = requests.get(f"https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/14.1.2/{filename}", stream=True)
+        if response.status_code == 200:
+            with open(filename, 'wb') as file:
+                file.write(response.content)
+
+        proc = run_capture(["tar", "-xvzf", filename], check=True)
+        os.chdir(f"/workspace/{graphviz_path}")
         proc = run_capture(["./configure"], check=True)
         proc = run_capture(["make", "-j16"], check=True)
         proc = run_capture(["make", "install"], check=True)
