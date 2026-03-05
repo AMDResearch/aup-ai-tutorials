@@ -22,23 +22,24 @@ def run_capture(cmd, check: bool = False, **kwargs) -> subprocess.CompletedProce
     return subprocess.run(cmd, capture_output=True, text=True, check=check, **kwargs)
 
 
-def aup_setup(pgk_update: bool=True, zstd_install: bool=True,
-              vllm: bool=True) -> None:
+def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
+              vllm: bool=False, graphviz_install: bool=True) -> None:
     """ Setup Environment by installing required packages"""
-
-    if pgk_update:
-        proc = run_capture(["sudo", "apt", "update"], check=True)
-        proc = run_capture(["sudo", "apt", "install", "-y", "htop",
-                            "python3-dev", "graphviz", "libgraphviz-dev",
-                            "pkg-config"],
-                           check=True)
-        logging.info("System packages updated %s.", message_string(proc))
 
     amd_dev_cloud = False
     for env in os.environ:
         if 'AI_ACADEMY' in env:
             amd_dev_cloud = True
             break
+
+    if pgk_update:
+        proc = run_capture(["sudo", "apt", "update"], check=True)
+        logging.info("System packages updated %s.", message_string(proc))
+        proc = run_capture(["sudo", "apt", "install", "-y", "htop",
+                            "python3-dev", "graphviz", "libgraphviz-dev",
+                            "pkg-config"],
+                           check=True)
+        logging.info("System packages installed %s.", message_string(proc))
 
     logging.info("AMD Developer Cloud detected: %s.", amd_dev_cloud)
     if amd_dev_cloud and vllm:
@@ -68,6 +69,15 @@ def aup_setup(pgk_update: bool=True, zstd_install: bool=True,
         proc = run_capture(["ninja"], check=True)
         proc = run_capture(["sudo", "ninja", "install"], check=True)
         logging.info("Zstd installed %s.", message_string(proc))
+        os.chdir("/workspace/")
+
+    if graphviz_install and not os.path.exists("/workspace/graphviz") and amd_dev_cloud:
+        proc = run_capture(["git", "clone", "https://gitlab.com/graphviz/graphviz/"], check=True)
+        os.chdir("/workspace/graphviz")
+        proc = run_capture(["./configure"], check=True)
+        proc = run_capture(["make", "-j16"], check=True)
+        proc = run_capture(["make", "install"], check=True)
+        logging.info("graphviz installed %s.", message_string(proc))
         os.chdir("/workspace/")
 
     proc = run_capture(["python3", "-m", "pip", "install", "--upgrade", "pip"], check=True)
