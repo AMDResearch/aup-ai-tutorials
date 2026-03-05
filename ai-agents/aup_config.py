@@ -64,6 +64,7 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
     if zstd_install and not os.path.exists("/workspace/zstd") and amd_dev_cloud:
         proc = run_capture(["git", "clone", "https://github.com/facebook/zstd"], check=True)
         os.chdir("/workspace/zstd")
+        proc = run_capture(["git", "checkout", "6e1e545"], check=True)
         proc = run_capture(["cmake", "-S", ".", "-B", "build-cmake-debug", "-G", "Ninja", "-DCMAKE_OSX_ARCHITECTURES='x86_64'"], check=True)
         os.chdir("/workspace/zstd/build-cmake-debug")
         proc = run_capture(["ninja"], check=True)
@@ -72,9 +73,10 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
         os.chdir("/workspace/")
 
     filename = "graphviz-14.1.2.tar.gz"
-    graphviz_path = filename.replace(".tar.gz", "")
+    graphviz_path = filename.split(".tar.gz")[0]
+    graphviz_version = graphviz_path.split("-")[-1]
     if graphviz_install and not os.path.exists(f"/workspace/{graphviz_path}") and amd_dev_cloud:
-        response = requests.get(f"https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/14.1.2/{filename}", stream=True)
+        response = requests.get(f"https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/{graphviz_version}/{filename}", stream=True)
         if response.status_code == 200:
             with open(filename, 'wb') as file:
                 file.write(response.content)
@@ -97,7 +99,7 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
     proc = run_capture(["pip", "install", "langgraph", "langchain", "langchain-ollama",
                         "pygraphviz", "langchain-openai", "langchain_mcp_adapters",
                         "pydantic_ai", "mcp_server_time", "openmeteo_requests",
-                        "requests_cache", "retry_requests"],
+                        "requests_cache", "retry_requests", "grandalf"],
                        check=True)
 
     logging.info("Pip packages installed %s.", message_string(proc))
