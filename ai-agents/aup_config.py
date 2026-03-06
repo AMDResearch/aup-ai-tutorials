@@ -125,6 +125,7 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
 
     os.environ["OLLAMA_FLASH_ATTENTION"] = "1"
     os.environ["OLLAMA_NO_CLOUD"] = "1"
+    os.environ["OLLAMA_CONTEXT_LENGTH"] = "16000"
 
     proc = run_capture(["ollama", "list"], check=False)
     if proc.returncode != 0:
