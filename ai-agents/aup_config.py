@@ -141,7 +141,7 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
         logging.info("Ollama is already running")
 
     logging.info("Ollama is pulling models, this may take a while...")
-    ollama_model_list = ["qwen3:8b", "nomic-embed-text:v1.5"]
+    ollama_model_list = ["qwen3:8b", "qwen3.5:4b"]
     for model in ollama_model_list:
         proc = run_capture(["ollama", "pull", model], check=True)
         if proc.returncode != 0:
