@@ -1,7 +1,7 @@
 #Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.
 #SPDX-License-Identifier: MIT
 
-FROM rocm/pytorch:rocm6.4.2_ubuntu24.04_py3.12_pytorch_release_2.6.0
+FROM rocm/pytorch:rocm7.1_ubuntu24.04_py3.12_pytorch_release_2.8.0
 
 RUN apt-get -y update
 RUN apt-get install -y python3-opencv psmisc less vim git
