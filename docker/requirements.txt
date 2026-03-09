@@ -47,7 +47,7 @@ myst-nb
 ipywidgets
 onnxruntime
 cmake<4.0
-amd-quark==0.10
+amd-quark==0.11
 seaborn
 notebook
 safetensors
