@@ -52,7 +52,8 @@ seaborn
 notebook
 safetensors
 huggingface_hub[cli]
-lm_eval
+lm_eval==0.4.9.2
 nltk
 optimum[amd]
 pygit2
+onnxruntime_genai
