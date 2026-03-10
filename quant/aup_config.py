@@ -21,6 +21,26 @@ def run_capture(cmd, check: bool = False, **kwargs) -> subprocess.CompletedProce
     return subprocess.run(cmd, capture_output=True, text=True, check=check, **kwargs)
 
 
+def _patch_pytorch_utils() -> None:
+    """Add the removed is_torch_less_than_1_11 flag to transformers.pytorch_utils."""
+    utils_path = "/usr/local/lib/python3.12/dist-packages/transformers/pytorch_utils.py"
+    if not os.path.isfile(utils_path):
+        logging.warning("pytorch_utils.py not found at %s, skipping patch.", utils_path)
+        return
+
+    with open(utils_path, "r", encoding="utf-8") as fh:
+        content = fh.read()
+
+    if "is_torch_less_than_1_11" in content:
+        logging.info("pytorch_utils.py already contains is_torch_less_than_1_11.")
+        return
+
+    patch = "\n# Patched by aup_config\nis_torch_less_than_1_11 = False\n"
+    with open(utils_path, "a", encoding="utf-8") as fh:
+        fh.write(patch)
+    logging.info("Patched %s: added is_torch_less_than_1_11.", utils_path)
+
+
 def aup_setup() -> None:
     """ Setup Environment by installing required packages"""
 
@@ -38,8 +58,11 @@ def aup_setup() -> None:
 
     proc = run_capture(["pip", "install", "matplotlib", "ml_dtypes", "tabulate",
                         "amd-quark==0.11", "onnxruntime", "onnx>=1.16.2",
-                        "onnxscript", "pygit2"],
+                        "onnxscript", "pygit2", "lm_eval", "optimum[amd]"],
                        check=True)
+
+    if amd_dev_cloud:
+        _patch_pytorch_utils()
 
     logging.info("Pip packages installed %s.", message_string(proc))
 

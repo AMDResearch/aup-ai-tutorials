@@ -23,7 +23,7 @@ def run_capture(cmd, check: bool = False, **kwargs) -> subprocess.CompletedProce
 
 
 def aup_setup(zstd_install: bool=True, vllm: bool=False,
-              graphviz_install: bool=True) -> None:
+              graphviz_install: bool=True) -> list[str]:
     """ Setup Environment by installing required packages"""
 
     workspace_dir = os.getcwd()

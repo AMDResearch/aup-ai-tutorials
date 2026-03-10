@@ -21,8 +21,7 @@ def run_capture(cmd, check: bool = False, **kwargs) -> subprocess.CompletedProce
     return subprocess.run(cmd, capture_output=True, text=True, check=check, **kwargs)
 
 
-def aup_setup(zstd_install: bool=True,
-              vllm: bool=False) -> None:
+def aup_setup(zstd_install: bool=True, vllm: bool=False) -> list[str]:
     """ Setup Environment by installing required packages"""
 
     workspace_dir = os.getcwd()
