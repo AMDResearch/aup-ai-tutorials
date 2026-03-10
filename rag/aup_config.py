@@ -21,16 +21,11 @@ def run_capture(cmd, check: bool = False, **kwargs) -> subprocess.CompletedProce
     return subprocess.run(cmd, capture_output=True, text=True, check=check, **kwargs)
 
 
-def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
+def aup_setup(zstd_install: bool=True,
               vllm: bool=False) -> None:
     """ Setup Environment by installing required packages"""
 
-    if pgk_update:
-        proc = run_capture(["sudo", "apt", "update"], check=True)
-        proc = run_capture(["sudo", "apt", "install", "-y", "htop"],
-                           check=True)
-        logging.info("System packages updated %s.", message_string(proc))
-
+    workspace_dir = os.getcwd()
     amd_dev_cloud = False
     for env in os.environ:
         if 'AI_ACADEMY' in env:
@@ -38,6 +33,7 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
             break
 
     logging.info("AMD Developer Cloud detected: %s.", amd_dev_cloud)
+
     if amd_dev_cloud and vllm:
         large_model = False
         model_name = "Qwen3-30B-A3B" if large_model else "Qwen3-8B"
@@ -57,15 +53,16 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
             f.write(vllm_file)
         logging.info("Wrote vLLM script: %s.", amd_dev_cloud)
 
-    if zstd_install and not os.path.exists("/workspace/zstd") and amd_dev_cloud:
+    zstd_path = os.path.join(workspace_dir, "zstd")
+    if zstd_install and not os.path.exists(zstd_path) and amd_dev_cloud:
         proc = run_capture(["git", "clone", "https://github.com/facebook/zstd"], check=True)
-        os.chdir("/workspace/zstd")
+        os.chdir(zstd_path)
         proc = run_capture(["cmake", "-S", ".", "-B", "build-cmake-debug", "-G", "Ninja", "-DCMAKE_OSX_ARCHITECTURES='x86_64'"], check=True)
-        os.chdir("/workspace/zstd/build-cmake-debug")
+        os.chdir(os.path.join(zstd_path, "build-cmake-debug"))
         proc = run_capture(["ninja"], check=True)
         proc = run_capture(["sudo", "ninja", "install"], check=True)
         logging.info("Zstd installed %s.", message_string(proc))
-        os.chdir("/workspace/")
+        os.chdir(workspace_dir)
 
     proc = run_capture(["python3", "-m", "pip", "install", "--upgrade", "pip"], check=True)
     logging.info("Pip upgraded installed %s.", message_string(proc))
@@ -125,4 +122,4 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    aup_setup(pgk_update=False, zstd_install=True)
+    aup_setup(zstd_install=True)
