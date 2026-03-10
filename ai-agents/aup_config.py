@@ -27,7 +27,6 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
     """ Setup Environment by installing required packages"""
 
     workspace_dir = os.getcwd()
-
     amd_dev_cloud = False
     for env in os.environ:
         if 'AI_ACADEMY' in env:
@@ -153,4 +152,4 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    aup_setup(pgk_update=False, zstd_install=True)
+    aup_setup(zstd_install=True)
