@@ -22,24 +22,17 @@ def run_capture(cmd, check: bool = False, **kwargs) -> subprocess.CompletedProce
     return subprocess.run(cmd, capture_output=True, text=True, check=check, **kwargs)
 
 
-def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
-              vllm: bool=False, graphviz_install: bool=True) -> None:
+def aup_setup(zstd_install: bool=True, vllm: bool=False,
+              graphviz_install: bool=True) -> None:
     """ Setup Environment by installing required packages"""
+
+    workspace_dir = os.getcwd()
 
     amd_dev_cloud = False
     for env in os.environ:
         if 'AI_ACADEMY' in env:
             amd_dev_cloud = True
             break
-
-    if pgk_update:
-        proc = run_capture(["sudo", "apt", "update"], check=True)
-        logging.info("System packages updated %s.", message_string(proc))
-        proc = run_capture(["sudo", "apt", "install", "-y", "htop",
-                            "python3-dev", "graphviz", "libgraphviz-dev",
-                            "pkg-config"],
-                           check=True)
-        logging.info("System packages installed %s.", message_string(proc))
 
     logging.info("AMD Developer Cloud detected: %s.", amd_dev_cloud)
     if amd_dev_cloud and vllm:
@@ -61,33 +54,35 @@ def aup_setup(pgk_update: bool=False, zstd_install: bool=True,
             f.write(vllm_file)
         logging.info("Wrote vLLM script: %s.", amd_dev_cloud)
 
-    if zstd_install and not os.path.exists("/workspace/zstd") and amd_dev_cloud:
+    zstd_path = os.path.join(workspace_dir, "zstd")
+    if zstd_install and not os.path.exists(zstd_path) and amd_dev_cloud:
         proc = run_capture(["git", "clone", "https://github.com/facebook/zstd"], check=True)
-        os.chdir("/workspace/zstd")
+        os.chdir(zstd_path)
         proc = run_capture(["git", "checkout", "6e1e545"], check=True)
         proc = run_capture(["cmake", "-S", ".", "-B", "build-cmake-debug", "-G", "Ninja", "-DCMAKE_OSX_ARCHITECTURES='x86_64'"], check=True)
-        os.chdir("/workspace/zstd/build-cmake-debug")
+        os.chdir(os.path.join(zstd_path, "build-cmake-debug"))
         proc = run_capture(["ninja"], check=True)
         proc = run_capture(["sudo", "ninja", "install"], check=True)
         logging.info("Zstd installed %s.", message_string(proc))
-        os.chdir("/workspace/")
+        os.chdir(workspace_dir)
 
     filename = "graphviz-14.1.2.tar.gz"
-    graphviz_path = filename.split(".tar.gz")[0]
-    graphviz_version = graphviz_path.split("-")[-1]
-    if graphviz_install and not os.path.exists(f"/workspace/{graphviz_path}") and amd_dev_cloud:
+    graphviz_dirname = filename.split(".tar.gz")[0]
+    graphviz_version = graphviz_dirname.split("-")[-1]
+    graphviz_path = os.path.join(workspace_dir, graphviz_dirname)
+    if graphviz_install and not os.path.exists(graphviz_path) and amd_dev_cloud:
         response = requests.get(f"https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/{graphviz_version}/{filename}", stream=True)
         if response.status_code == 200:
             with open(filename, 'wb') as file:
                 file.write(response.content)
 
         proc = run_capture(["tar", "-xvzf", filename], check=True)
-        os.chdir(f"/workspace/{graphviz_path}")
+        os.chdir(graphviz_path)
         proc = run_capture(["./configure"], check=True)
         proc = run_capture(["make", "-j16"], check=True)
         proc = run_capture(["make", "install"], check=True)
         logging.info("graphviz installed %s.", message_string(proc))
-        os.chdir("/workspace/")
+        os.chdir(workspace_dir)
 
     proc = run_capture(["python3", "-m", "pip", "install", "--upgrade", "pip"], check=True)
     logging.info("Pip upgraded installed %s.", message_string(proc))
