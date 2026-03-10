@@ -57,8 +57,10 @@ def aup_setup() -> None:
     logging.info("Pip upgraded installed %s.", message_string(proc))
 
     proc = run_capture(["pip", "install", "matplotlib", "ml_dtypes", "tabulate",
-                        "amd-quark==0.11", "onnxruntime", "onnx>=1.16.2",
-                        "onnxscript", "pygit2", "lm_eval", "optimum[amd]"],
+                        "onnxruntime", "onnx>=1.16.2",
+                        "onnxscript", "pygit2", "lm_eval==0.4.9.2",
+                        "optimum[amd]", "onnxruntime_genai",
+                        "git+https://github.com/amd/Quark/@release/0.11"],
                        check=True)
 
     if amd_dev_cloud:
