@@ -27,8 +27,16 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
     """ Setup Environment by installing required packages"""
 
     workspace_dir = os.getcwd()
-    amd_dev_cloud = 'AI_ACADEMY' in os.environ.keys()
-    aup_learning_cloud = 'AUP_LEARNING' in os.environ.keys()
+    amd_dev_cloud = False
+    aup_learning_cloud = False
+
+    for env in os.environ:
+        if 'AI_ACADEMY' in env:
+            amd_dev_cloud = True
+            break
+        if 'AUP_LEARNING' in env:
+            aup_learning_cloud = True
+            break
 
     logging.info("AMD Developer Cloud detected: %s.", amd_dev_cloud)
     logging.info("AUP Learning Cloud detected: %s.", aup_learning_cloud)
