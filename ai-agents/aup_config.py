@@ -27,16 +27,17 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
     """ Setup Environment by installing required packages"""
 
     workspace_dir = os.getcwd()
-    amd_dev_cloud = False
-    for env in os.environ:
-        if 'AI_ACADEMY' in env:
-            amd_dev_cloud = True
-            break
+    amd_dev_cloud = 'AI_ACADEMY' in os.environ.keys()
+    aup_learning_cloud = 'AUP_LEARNING' in os.environ.keys()
 
     logging.info("AMD Developer Cloud detected: %s.", amd_dev_cloud)
+    logging.info("AUP Learning Cloud detected: %s.", aup_learning_cloud)
+    if aup_learning_cloud:
+        return
+
     if amd_dev_cloud and vllm:
         large_model = False
-        model_name = "Qwen3-30B-A3B" if large_model else "Qwen3-8B"
+        model_name = "Qwen3.5-35B-A3B" if large_model else "Qwen3.5-9B"
         vllm_file = f"""#!/bin/bash
 
         VLLM_USE_TRITON_FLASH_ATTN=0 \\
@@ -100,7 +101,7 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
 
     files = ["open_weather.py", "math_server.py"]
     for file in files:
-        base_url = f"https://raw.githubusercontent.com/AMDResearch/aup-ai-tutorials/refs/heads/ai-agents/ai-agents/{file}"
+        base_url = f"https://raw.githubusercontent.com/AMDResearch/aup-ai-tutorials/refs/heads/main/ai-agents/{file}"
         if not os.path.isfile(file):
             response = requests.get(base_url, stream=True)
             if response.status_code == 200:
@@ -136,7 +137,7 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
         logging.info("Ollama is already running")
 
     logging.info("Ollama is pulling models, this may take a while...")
-    ollama_model_list = ["qwen3:8b", "qwen3.5:4b"]
+    ollama_model_list = ["qwen3.5:9b"]
     for model in ollama_model_list:
         proc = run_capture(["ollama", "pull", model], check=True)
         if proc.returncode != 0:
