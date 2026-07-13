@@ -101,7 +101,7 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
 
     proc = run_capture(["pip", "install", "langgraph", "langchain", "langchain-ollama",
                         "pygraphviz", "langchain-openai", "langchain_mcp_adapters",
-                        "pydantic_ai", "mcp_server_time", "openmeteo_requests",
+                        "pydantic_ai>=2", "mcp_server_time", "openmeteo_requests",
                         "requests_cache", "retry_requests", "grandalf"],
                        check=True)
 
