@@ -57,3 +57,4 @@ nltk
 optimum[amd]
 pygit2
 onnxruntime_genai
+pydantic_ai>=2
