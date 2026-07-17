@@ -80,8 +80,8 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False) -> list[str]:
     proc = run_capture(["pip", "install", "--force-reinstall", "openai==2.21"],
                        check=True)
 
-    proc = run_capture(["pip", "install", "langchain", "langchain-community",
-                        "langchain-experimental", "langchain-text-splitters",
+    proc = run_capture(["pip", "install", "langchain", "langchain-community==0.4.1",
+                        "langchain-experimental==0.4.1", "langchain-text-splitters",
                         "pypdf", "fastembed", "ollama", "langchain-ollama",
                         "faiss-cpu", "langchain-chroma", "chromadb", "bs4",
                         "langchain-openai"],
