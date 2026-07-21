@@ -44,6 +44,7 @@ def _patch_pytorch_utils() -> None:
 def aup_setup() -> None:
     """ Setup Environment by installing required packages"""
 
+    logging.basicConfig(level=logging.INFO)
     workspace_dir = os.getcwd()
     baseurl = os.environ.get("BASE_URL")
     amd_dev_cloud = True if baseurl=="notebooks.amd.com" else False
@@ -84,5 +85,4 @@ def aup_setup() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
     aup_setup()

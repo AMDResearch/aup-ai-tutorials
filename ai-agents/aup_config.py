@@ -26,6 +26,7 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
               graphviz_install: bool=True) -> list[str]:
     """ Setup Environment by installing required packages"""
 
+    logging.basicConfig(level=logging.INFO)
     workspace_dir = os.getcwd()
     aup_learning_cloud = False
 
@@ -159,5 +160,4 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
     aup_setup(zstd_install=True)
