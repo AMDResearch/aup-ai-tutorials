@@ -26,14 +26,14 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
               graphviz_install: bool=True) -> list[str]:
     """ Setup Environment by installing required packages"""
 
+    logging.basicConfig(level=logging.INFO)
     workspace_dir = os.getcwd()
-    amd_dev_cloud = False
     aup_learning_cloud = False
 
+    baseurl = os.environ.get("BASE_URL")
+    amd_dev_cloud = True if baseurl=="notebooks.amd.com" else False
+
     for env in os.environ:
-        if 'AI_ACADEMY' in env:
-            amd_dev_cloud = True
-            break
         if 'AUP_LEARNING' in env:
             aup_learning_cloud = True
             break
@@ -160,5 +160,4 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
     aup_setup(zstd_install=True)
