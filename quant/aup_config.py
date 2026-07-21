@@ -45,11 +45,9 @@ def aup_setup() -> None:
     """ Setup Environment by installing required packages"""
 
     workspace_dir = os.getcwd()
-    amd_dev_cloud = False
-    for env in os.environ:
-        if 'AI_ACADEMY' in env:
-            amd_dev_cloud = True
-            break
+    baseurl = os.environ.get("BASE_URL")
+    amd_dev_cloud = True if baseurl=="notebooks.amd.com" else False
+
     logging.info("AMD Developer Cloud detected: %s.", amd_dev_cloud)
 
     proc = run_capture(["python3", "-m", "pip", "install", "--upgrade", "pip"],

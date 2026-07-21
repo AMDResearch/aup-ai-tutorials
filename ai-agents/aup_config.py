@@ -27,13 +27,12 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
     """ Setup Environment by installing required packages"""
 
     workspace_dir = os.getcwd()
-    amd_dev_cloud = False
     aup_learning_cloud = False
 
+    baseurl = os.environ.get("BASE_URL")
+    amd_dev_cloud = True if baseurl=="notebooks.amd.com" else False
+
     for env in os.environ:
-        if 'AI_ACADEMY' in env:
-            amd_dev_cloud = True
-            break
         if 'AUP_LEARNING' in env:
             aup_learning_cloud = True
             break
