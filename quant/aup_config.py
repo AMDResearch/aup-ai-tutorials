@@ -81,6 +81,7 @@ def aup_setup() -> None:
                 file_handle.write(response.content)
         logging.info("Pretrained Resnet model %s downloaded.", file)
 
+    logging.getLogger().setLevel(logging.WARNING)
     return
 
 

@@ -125,7 +125,7 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False) -> list[str]:
     logging.info("Ollama models %s pulled successfully.",
                 ", ".join(ollama_model_list))
 
-
+    logging.getLogger().setLevel(logging.WARNING)
     return ollama_model_list
 
 
