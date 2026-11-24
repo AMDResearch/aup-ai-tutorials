@@ -6,6 +6,8 @@ import logging
 import subprocess
 import time
 import os
+import glob
+import shutil
 
 
 def message_string(proc: subprocess.CompletedProcess) -> str:
@@ -97,13 +99,34 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False) -> list[str]:
         proc = run_capture(cmd, check=True, shell=True)
         logging.info("Ollama installed %s.", message_string(proc))
 
+    # The installer finds AMD GPUs only with lspci or lshw, which containers
+    # often lack, and then installs the CPU-only build: every answer takes
+    # minutes. When the GPU is visible (/dev/kfd), add the ROCm build it skipped.
+    ollama_lib = os.path.join(os.path.dirname(os.path.dirname(
+        shutil.which("ollama") or "/usr/local/bin/ollama")), "lib", "ollama")
+    if os.path.exists("/dev/kfd") and not glob.glob(os.path.join(ollama_lib, "rocm*")):
+        cmd = ("curl -fsSL https://ollama.com/download/ollama-linux-amd64-rocm.tar.zst"
+               f" | zstd -d | tar -x -C {os.path.dirname(os.path.dirname(ollama_lib))}")
+        proc = run_capture(cmd, check=True, shell=True)
+        logging.info("Ollama ROCm support installed %s.", message_string(proc))
+
     os.environ["OLLAMA_FLASH_ATTENTION"] = "1"
     os.environ["OLLAMA_NO_CLOUD"] = "1"
+    # LLM chunking sends ~8k tokens of the user guide in one prompt; a shorter
+    # context makes Ollama refuse it with "400 Bad Request".
+    os.environ["OLLAMA_CONTEXT_LENGTH"] = "32768"
 
     proc = run_capture(["ollama", "list"], check=False)
     if proc.returncode != 0:
+        # Ollama ships its own ROCm. HIP_DEVICE_LIB_PATH from a ROCm image points
+        # it at that image's device libraries, which it cannot link against, and
+        # every model load segfaults. The code-object cache keeps such a failed
+        # build, so it is off too: otherwise a crash once means a crash always.
+        ollama_env = {k: v for k, v in os.environ.items() if k != "HIP_DEVICE_LIB_PATH"}
+        ollama_env["AMD_COMGR_CACHE"] = "0"
         subprocess.Popen(
             ["ollama", "serve"],
+            env=ollama_env,
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
