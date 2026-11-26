@@ -61,7 +61,7 @@ async def get_forecast(latitude: float, longitude: float) -> dict:
 
 @mcp.tool()
 async def get_weather_past_2_days(latitude: float, longitude: float) -> dict:
-    """Get weather forecast for a location.
+    """Get the hourly weather for a location over the past 2 days.
 
     Args:
         latitude: Latitude of the location
@@ -80,6 +80,9 @@ async def get_weather_past_2_days(latitude: float, longitude: float) -> dict:
     	"longitude": longitude,
     	"hourly": variables,
         "past_days": 2,
+        # Without this the API adds 7 forecast days: ~20k tokens, more than
+        # the model's context, and the next call fails with 400 Bad Request
+        "forecast_days": 0,
     }
 
     responses = openmeteo.weather_api(BASE_URL, params=params)
@@ -91,7 +94,8 @@ async def get_weather_past_2_days(latitude: float, longitude: float) -> dict:
     weather_dict = dict.fromkeys(variables, 0.0)
     hourly = response.Hourly()
     for idx, item in enumerate(variables):
-        weather_dict[item] = list(hourly.Variables(idx).ValuesAsNumpy())
+        # Plain rounded numbers: numpy floats reach the model as long strings
+        weather_dict[item] = [round(float(value), 1) for value in hourly.Variables(idx).ValuesAsNumpy()]
 
     weather_dict['elevation'] = response.Elevation()
     weather_dict['difference_to_gmt0'] = response.UtcOffsetSeconds()

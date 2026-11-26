@@ -141,7 +141,7 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False,
 
     os.environ["OLLAMA_FLASH_ATTENTION"] = "1"
     os.environ["OLLAMA_NO_CLOUD"] = "1"
-    os.environ["OLLAMA_CONTEXT_LENGTH"] = "16000"
+    os.environ["OLLAMA_CONTEXT_LENGTH"] = "32768"
 
     proc = run_capture(["ollama", "list"], check=False)
     if proc.returncode != 0:
