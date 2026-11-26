@@ -43,8 +43,6 @@ def aup_setup(zstd_install: bool=True, vllm: bool=False) -> list[str]:
     if aup_learning_cloud:
         return
 
-    logging.info("AMD Developer Cloud detected: %s.", amd_dev_cloud)
-
     if amd_dev_cloud and vllm:
         large_model = False
         model_name = "Qwen3.5-35B-A3B" if large_model else "Qwen3.5-9B"
